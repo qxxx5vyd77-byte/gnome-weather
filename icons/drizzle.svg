@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9ab8cc"/>
+      <stop offset="100%" stop-color="#d8e8f0"/>
+    </linearGradient>
+    <radialGradient id="cloudGrad" cx="38%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#e8e4dc"/>
+      <stop offset="100%" stop-color="#b8b0a0"/>
+    </radialGradient>
+    <radialGradient id="mushroomCap" cx="38%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#d4856a"/>
+      <stop offset="100%" stop-color="#8b3e22"/>
+    </radialGradient>
+    <linearGradient id="rainbow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e74c3c" stop-opacity="0.3"/>
+      <stop offset="17%" stop-color="#e67e22" stop-opacity="0.3"/>
+      <stop offset="33%" stop-color="#f1c40f" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#27ae60" stop-opacity="0.3"/>
+      <stop offset="67%" stop-color="#2980b9" stop-opacity="0.3"/>
+      <stop offset="83%" stop-color="#8e44ad" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#e74c3c" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="cloudShadow">
+      <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#6b5a42" flood-opacity="0.22"/>
+    </filter>
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="1"/>
+    </filter>
+    <filter id="rainDrop">
+      <feGaussianBlur stdDeviation="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="200" height="200" fill="url(#sky)"/>
+
+  <!-- Rainbow arc (subtle, in background) -->
+  <!-- Multiple stripes as arcs -->
+  <path d="M18 170 Q100 60 182 170" stroke="#e74c3c" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.15"/>
+  <path d="M24 170 Q100 68 176 170" stroke="#f1c40f" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.15"/>
+  <path d="M30 170 Q100 76 170 170" stroke="#27ae60" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.15"/>
+  <path d="M36 170 Q100 84 164 170" stroke="#2980b9" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.15"/>
+  <path d="M42 170 Q100 92 158 170" stroke="#8e44ad" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.12"/>
+
+  <!-- Cloud - soft and fluffy -->
+  <g filter="url(#cloudShadow)">
+    <circle cx="95" cy="68" r="22" fill="url(#cloudGrad)"/>
+    <circle cx="118" cy="62" r="24" fill="url(#cloudGrad)"/>
+    <circle cx="140" cy="68" r="18" fill="url(#cloudGrad)"/>
+    <circle cx="78" cy="74" r="18" fill="url(#cloudGrad)"/>
+    <circle cx="155" cy="76" r="13" fill="url(#cloudGrad)"/>
+    <circle cx="107" cy="57" r="16" fill="url(#cloudGrad)"/>
+    <rect x="76" y="72" width="84" height="26" rx="8" fill="url(#cloudGrad)" filter="url(#softBlur)"/>
+  </g>
+  <!-- Cloud highlight -->
+  <path d="M88 59 Q108 52 126 58" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Gentle raindrop lines (teardrop shapes) -->
+  <!-- Drop 1 -->
+  <g opacity="0.75">
+    <path d="M90 102 C89 106 88 110 90 114 C91 118 93 118 94 114 C95 110 94 106 90 102" fill="#87ceeb" filter="url(#rainDrop)"/>
+    <line x1="90" y1="95" x2="90" y2="103" stroke="#87ceeb" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  <!-- Drop 2 -->
+  <g opacity="0.75">
+    <path d="M110 110 C109 114 108 118 110 122 C111 126 113 126 114 122 C115 118 114 114 110 110" fill="#87ceeb" filter="url(#rainDrop)"/>
+    <line x1="110" y1="103" x2="110" y2="111" stroke="#87ceeb" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  <!-- Drop 3 -->
+  <g opacity="0.65">
+    <path d="M128 100 C127 104 126 108 128 112 C129 116 131 116 132 112 C133 108 132 104 128 100" fill="#87ceeb" filter="url(#rainDrop)"/>
+    <line x1="128" y1="93" x2="128" y2="101" stroke="#87ceeb" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+  </g>
+  <!-- Drop 4 (faint, off to side) -->
+  <g opacity="0.5">
+    <path d="M145 107 C144 111 143 115 145 118 C146 121 148 121 149 118 C150 115 149 111 145 107" fill="#a8d8ea" filter="url(#rainDrop)"/>
+  </g>
+
+  <!-- Ground -->
+  <path d="M0 178 Q50 172 100 175 Q150 178 200 174 L200 200 L0 200 Z" fill="#4a7c59"/>
+  <path d="M0 182 Q50 177 100 180 Q150 183 200 179 L200 200 L0 200 Z" fill="#2d5a27"/>
+
+  <!-- Mushroom below cloud catching rain -->
+  <!-- Stem -->
+  <path d="M104 180 C102 174 101 166 103 161 C104 157 110 157 111 161 C113 166 112 174 111 180 Z" fill="#f5f0e8"/>
+  <!-- Veil line on stem -->
+  <path d="M103 169 Q107 167 111 169" stroke="#d4c4a8" stroke-width="1" fill="none" opacity="0.7"/>
+  <!-- Mushroom cap -->
+  <path d="M92 162 C90 151 96 142 107 141 C118 140 124 148 122 158 C121 165 115 168 107 168 C99 168 93 165 92 162 Z" fill="url(#mushroomCap)"/>
+  <!-- Cap highlight -->
+  <path d="M97 150 C101 146 108 145 113 147" stroke="#e09070" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.65"/>
+  <!-- Mushroom spots -->
+  <circle cx="103" cy="157" r="3.5" fill="#f5f0e8" opacity="0.88"/>
+  <circle cx="112" cy="155" r="2.6" fill="#f5f0e8" opacity="0.82"/>
+  <circle cx="107" cy="163" r="2" fill="#f5f0e8" opacity="0.7"/>
+  <!-- Rain drop on mushroom cap -->
+  <circle cx="96" cy="155" r="1.5" fill="#87ceeb" opacity="0.7"/>
+  <circle cx="118" cy="158" r="1.2" fill="#87ceeb" opacity="0.6"/>
+</svg>

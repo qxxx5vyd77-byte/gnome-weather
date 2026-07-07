@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a8d8ea"/>
+      <stop offset="60%" stop-color="#d4eef7"/>
+      <stop offset="100%" stop-color="#f5f0e8"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff7a1" stop-opacity="0.9"/>
+      <stop offset="45%" stop-color="#ffd166" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#d4a843" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sunDisc" cx="38%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff9c4"/>
+      <stop offset="55%" stop-color="#f0c040"/>
+      <stop offset="100%" stop-color="#c8920a"/>
+    </radialGradient>
+    <radialGradient id="mushroomCap" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#d4856a"/>
+      <stop offset="100%" stop-color="#8b3e22"/>
+    </radialGradient>
+    <filter id="bigGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="rayBlur">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+    <filter id="sparkleGlow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="200" height="200" fill="url(#sky)"/>
+
+  <!-- Outer atmospheric glow -->
+  <circle cx="100" cy="86" r="78" fill="url(#sunGlow)" opacity="0.8"/>
+
+  <!-- Sun rays - 8 rounded petal-like rays -->
+  <g filter="url(#rayBlur)" opacity="0.82">
+    <!-- Top -->
+    <path d="M100 54 C102 45 104 37 100 28 C96 37 98 45 100 54" fill="#ffd166"/>
+    <!-- Top-right -->
+    <path d="M120 63 C127 55 134 49 141 43 C134 50 127 54 120 63" fill="#ffd166"/>
+    <!-- Right -->
+    <path d="M132 83 C141 81 149 80 159 79 C149 82 141 85 132 83" fill="#ffd166"/>
+    <!-- Bottom-right -->
+    <path d="M124 107 C131 115 137 122 142 131 C135 123 129 116 124 107" fill="#ffd166"/>
+    <!-- Bottom -->
+    <path d="M100 118 C102 127 104 135 100 144 C96 135 98 127 100 118" fill="#ffd166"/>
+    <!-- Bottom-left -->
+    <path d="M76 107 C69 115 63 122 58 131 C65 123 71 116 76 107" fill="#ffd166"/>
+    <!-- Left -->
+    <path d="M68 83 C59 81 51 80 41 79 C51 82 59 85 68 83" fill="#ffd166"/>
+    <!-- Top-left -->
+    <path d="M80 63 C73 55 66 49 59 43 C66 50 73 54 80 63" fill="#ffd166"/>
+  </g>
+
+  <!-- Broader soft ray glow -->
+  <g opacity="0.35" filter="url(#rayBlur)">
+    <path d="M100 54 C104 43 108 34 100 22 C92 34 96 43 100 54" fill="#d4a843"/>
+    <path d="M122 65 C130 55 140 47 148 39 C139 48 130 55 122 65" fill="#d4a843"/>
+    <path d="M134 85 C144 82 154 80 165 78 C154 82 144 86 134 85" fill="#d4a843"/>
+  </g>
+
+  <!-- Sun disc with glow -->
+  <circle cx="100" cy="86" r="38" fill="url(#sunDisc)" filter="url(#bigGlow)"/>
+  <!-- Sun disc crisp edge -->
+  <circle cx="100" cy="86" r="34" fill="url(#sunDisc)"/>
+
+  <!-- Ground / grassy earth at bottom -->
+  <path d="M0 182 Q20 176 40 180 Q60 184 80 178 Q100 172 120 177 Q140 182 160 178 Q180 174 200 179 L200 200 L0 200 Z" fill="#4a7c59"/>
+  <path d="M0 185 Q30 179 60 183 Q90 187 120 182 Q150 177 180 183 Q190 185 200 182 L200 200 L0 200 Z" fill="#2d5a27"/>
+
+  <!-- Grass tufts -->
+  <path d="M30 183 C29 177 31 173 30 168 M30 168 C32 173 34 177 33 182" stroke="#2d5a27" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M170 181 C169 175 171 171 170 166 M170 166 C172 171 174 175 173 180" stroke="#2d5a27" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Mushroom: stem -->
+  <path d="M96 176 C94 170 93 162 95 157 C96 153 104 153 105 157 C107 162 106 170 104 176 Z" fill="#f5f0e8"/>
+  <path d="M97 176 C96 171 96 164 97 159" stroke="#d4c4a8" stroke-width="1" fill="none"/>
+  <!-- Mushroom: cap -->
+  <path d="M83 160 C80 148 86 138 100 136 C114 134 120 144 118 156 C116 164 109 168 100 167 C91 167 84 164 83 160 Z" fill="url(#mushroomCap)"/>
+  <!-- Cap highlight -->
+  <path d="M89 145 C93 140 100 139 107 141" stroke="#e09070" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <!-- Mushroom spots -->
+  <circle cx="96" cy="153" r="3.5" fill="#f5f0e8" opacity="0.9"/>
+  <circle cx="107" cy="150" r="2.8" fill="#f5f0e8" opacity="0.85"/>
+  <circle cx="101" cy="161" r="2.2" fill="#f5f0e8" opacity="0.75"/>
+  <circle cx="91" cy="159" r="1.8" fill="#f5f0e8" opacity="0.6"/>
+
+  <!-- Star sparkles -->
+  <!-- Large sparkle top-right -->
+  <g filter="url(#sparkleGlow)">
+    <path d="M151 44 L153 50 L159 52 L153 54 L151 60 L149 54 L143 52 L149 50 Z" fill="#fff7a1"/>
+  </g>
+  <!-- Medium sparkle top-left -->
+  <g filter="url(#sparkleGlow)">
+    <path d="M48 52 L49.5 56.5 L54 58 L49.5 59.5 L48 64 L46.5 59.5 L42 58 L46.5 56.5 Z" fill="#fff7a1"/>
+  </g>
+  <!-- Small sparkle right -->
+  <g filter="url(#sparkleGlow)">
+    <path d="M164 95 L165 98 L168 99 L165 100 L164 103 L163 100 L160 99 L163 98 Z" fill="#fff7a1"/>
+  </g>
+  <!-- Tiny dot sparkles -->
+  <circle cx="142" cy="68" r="2" fill="#fff7a1" filter="url(#sparkleGlow)"/>
+  <circle cx="56" cy="78" r="2" fill="#fff7a1" filter="url(#sparkleGlow)"/>
+  <circle cx="158" cy="112" r="1.5" fill="#fff9c4" filter="url(#sparkleGlow)"/>
+  <circle cx="38" cy="106" r="1.5" fill="#fff9c4" filter="url(#sparkleGlow)"/>
+</svg>

@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f0e8"/>
+      <stop offset="100%" stop-color="#f5f0e8"/>
+    </linearGradient>
+    <radialGradient id="bulbGrad" cx="38%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ff7a5a"/>
+      <stop offset="100%" stop-color="#c03820"/>
+    </radialGradient>
+    <radialGradient id="bulbGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff9060" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#e05030" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mercuryGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7a5a"/>
+      <stop offset="60%" stop-color="#e85040"/>
+      <stop offset="100%" stop-color="#c03820"/>
+    </linearGradient>
+    <linearGradient id="tubeShadow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a86040" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="#a86040" stop-opacity="0.2"/>
+    </linearGradient>
+    <filter id="bulbGlowFilter" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softShadow">
+      <feDropShadow dx="3" dy="4" stdDeviation="5" flood-color="#8b5e3c" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Warm cream background -->
+  <rect width="200" height="200" fill="url(#bg)"/>
+
+  <!-- Subtle background circles / watercolor-esque texture -->
+  <circle cx="30" cy="30" r="45" fill="#f0e8d8" opacity="0.4"/>
+  <circle cx="170" cy="170" r="40" fill="#e8e0cc" opacity="0.3"/>
+
+  <!-- Thermometer body (terracotta tube) -->
+  <g filter="url(#softShadow)">
+    <!-- Outer tube shape -->
+    <rect x="90" y="28" width="22" height="118" rx="11" fill="#c17f59"/>
+    <!-- Inner tube channel -->
+    <rect x="96" y="34" width="10" height="106" rx="5" fill="#e8c8a8"/>
+    <!-- Shadow on tube sides -->
+    <rect x="90" y="28" width="22" height="118" rx="11" fill="url(#tubeShadow)"/>
+
+    <!-- Mercury column (red-gold fill) -->
+    <rect x="97" y="68" width="8" height="72" rx="4" fill="url(#mercuryGrad)"/>
+
+    <!-- Thermometer bulb (round bottom) -->
+    <circle cx="101" cy="155" r="17" fill="#c17f59"/>
+    <!-- Bulb glow -->
+    <circle cx="101" cy="155" r="22" fill="url(#bulbGlow)" opacity="0.7"/>
+    <!-- Bulb fill -->
+    <circle cx="101" cy="155" r="15" fill="url(#bulbGrad)" filter="url(#bulbGlowFilter)"/>
+    <!-- Bulb highlight -->
+    <circle cx="96" cy="149" r="4.5" fill="#ff9878" opacity="0.55"/>
+    <circle cx="94" cy="147" r="2" fill="#ffb8a0" opacity="0.45"/>
+  </g>
+
+  <!-- Temperature tick marks -->
+  <g stroke="#8b5e3c" stroke-linecap="round" opacity="0.55">
+    <line x1="113" y1="72" x2="118" y2="72" stroke-width="1.5"/>
+    <line x1="113" y1="82" x2="116" y2="82" stroke-width="1.2"/>
+    <line x1="113" y1="92" x2="118" y2="92" stroke-width="1.5"/>
+    <line x1="113" y1="102" x2="116" y2="102" stroke-width="1.2"/>
+    <line x1="113" y1="112" x2="118" y2="112" stroke-width="1.5"/>
+    <line x1="113" y1="122" x2="116" y2="122" stroke-width="1.2"/>
+    <line x1="113" y1="132" x2="118" y2="132" stroke-width="1.5"/>
+    <!-- °C symbol suggestion -->
+    <line x1="82" y1="72" x2="87" y2="72" stroke-width="1.5"/>
+    <line x1="82" y1="82" x2="85" y2="82" stroke-width="1.2"/>
+    <line x1="82" y1="92" x2="87" y2="92" stroke-width="1.5"/>
+    <line x1="82" y1="102" x2="85" y2="102" stroke-width="1.2"/>
+    <line x1="82" y1="112" x2="87" y2="112" stroke-width="1.5"/>
+  </g>
+
+  <!-- Leaf decoration - left side -->
+  <g transform="rotate(-30, 72, 85)">
+    <path d="M72 85 C68 76 62 68 65 60 C68 52 76 54 78 62 C80 70 76 78 72 85 Z" fill="#4a7c59" opacity="0.85"/>
+    <path d="M72 85 C72 75 70 65 66 60" stroke="#2d5a27" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <!-- Leaf veins -->
+    <path d="M72 78 C69 73 67 68 66 64" stroke="#3a6a48" stroke-width="0.8" fill="none" opacity="0.5"/>
+  </g>
+
+  <!-- Leaf decoration - right side (larger) -->
+  <g transform="rotate(25, 135, 100)">
+    <path d="M135 100 C140 90 148 83 145 74 C142 65 134 67 132 75 C130 83 132 92 135 100 Z" fill="#4a7c59" opacity="0.8"/>
+    <path d="M135 100 C135 89 137 79 142 74" stroke="#2d5a27" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.65"/>
+  </g>
+
+  <!-- Small decorative leaf at top of thermometer -->
+  <g transform="rotate(-15, 84, 40)">
+    <path d="M84 40 C80 33 78 24 82 18 C86 12 90 15 89 22 C88 29 86 35 84 40 Z" fill="#4a7c59" opacity="0.7"/>
+    <path d="M84 40 C83 32 83 24 83 19" stroke="#2d5a27" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <!-- Little mushroom at base (bottom right) -->
+  <g opacity="0.85">
+    <path d="M162 185 C161 180 160 173 162 169 C163 166 168 166 169 169 C171 173 170 180 169 185 Z" fill="#f5f0e8"/>
+    <path d="M152 170 C150 161 155 153 162 152 C169 151 174 158 173 167 C172 173 167 176 162 176 C157 176 153 173 152 170 Z" fill="#c17f59"/>
+    <circle cx="159" cy="167" r="2.5" fill="#f5f0e8" opacity="0.85"/>
+    <circle cx="167" cy="164" r="2" fill="#f5f0e8" opacity="0.8"/>
+    <circle cx="162" cy="172" r="1.5" fill="#f5f0e8" opacity="0.65"/>
+  </g>
+
+  <!-- Tiny decorative dots / berries -->
+  <circle cx="148" cy="48" r="5" fill="#c17f59" opacity="0.6"/>
+  <circle cx="142" cy="42" r="4" fill="#8b3e22" opacity="0.5"/>
+  <circle cx="155" cy="44" r="3.5" fill="#c17f59" opacity="0.55"/>
+  <path d="M142 48 C145 40 148 36 150 30" stroke="#4a7c59" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.6"/>
+</svg>

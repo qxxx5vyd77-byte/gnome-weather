@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="duskSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6b4c8a" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#c17f59"/>
+      <stop offset="70%" stop-color="#d4a843"/>
+      <stop offset="100%" stop-color="#f4a261"/>
+    </linearGradient>
+    <radialGradient id="sunsetGlow" cx="50%" cy="75%" r="50%">
+      <stop offset="0%" stop-color="#ffd166" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#e76f51" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#c17f59" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="treeColor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a2e1a"/>
+      <stop offset="100%" stop-color="#0d1a0d"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Dusk sky -->
+  <rect width="200" height="200" fill="url(#duskSky)" rx="12"/>
+  <!-- Horizon glow -->
+  <ellipse cx="100" cy="145" rx="100" ry="40" fill="url(#sunsetGlow)"/>
+  <!-- Sun descending -->
+  <circle cx="100" cy="148" r="20" fill="#ffd166" filter="url(#glow)" opacity="0.95"/>
+  <circle cx="100" cy="148" r="16" fill="#fff7a1" opacity="0.9"/>
+  <!-- Sun rays (fading) -->
+  <g transform="translate(100,148)" stroke="#ffd166" stroke-width="2" opacity="0.5">
+    <line x1="0" y1="-26" x2="0" y2="-36"/>
+    <line x1="18" y1="-18" x2="25" y2="-25"/>
+    <line x1="26" y1="0" x2="36" y2="0"/>
+    <line x1="-26" y1="0" x2="-36" y2="0"/>
+    <line x1="-18" y1="-18" x2="-25" y2="-25"/>
+  </g>
+  <!-- Tree silhouettes -->
+  <!-- Left tree -->
+  <g fill="url(#treeColor)">
+    <polygon points="15,165 25,110 35,165"/>
+    <polygon points="10,155 25,100 40,155"/>
+    <polygon points="12,145 25,90 38,145"/>
+    <rect x="22" y="165" width="6" height="20"/>
+  </g>
+  <!-- Middle tree -->
+  <g fill="url(#treeColor)">
+    <polygon points="70,170 82,115 94,170"/>
+    <polygon points="66,158 82,105 98,158"/>
+    <rect x="79" y="170" width="6" height="20"/>
+  </g>
+  <!-- Right cottage silhouette -->
+  <g fill="url(#treeColor)">
+    <rect x="140" y="145" width="45" height="40"/>
+    <polygon points="135,145 185,145 162,120"/>
+    <!-- Warm glowing window -->
+    <rect x="150" y="155" width="10" height="10" fill="#ffd166" opacity="0.9"/>
+    <rect x="168" y="155" width="10" height="10" fill="#ffd166" opacity="0.8"/>
+  </g>
+  <!-- Ground -->
+  <path d="M0,178 Q50,170 100,175 Q150,180 200,172 L200,200 L0,200 Z" fill="#1a2e1a"/>
+  <!-- Birds in silhouette -->
+  <g fill="none" stroke="#1a2e1a" stroke-width="1.5" opacity="0.8">
+    <path d="M55,55 Q58,52 61,55"/>
+    <path d="M68,45 Q71,42 74,45"/>
+    <path d="M80,58 Q83,55 86,58"/>
+    <path d="M42,65 Q45,62 48,65"/>
+  </g>
+  <!-- Purple-tinted stars appearing -->
+  <g fill="#f5f0e8" opacity="0.7">
+    <circle cx="160" cy="30" r="1.5"/>
+    <circle cx="175" cy="50" r="1"/>
+    <circle cx="145" cy="45" r="1"/>
+    <circle cx="30" cy="40" r="1.2"/>
+    <circle cx="50" cy="25" r="1"/>
+  </g>
+</svg>

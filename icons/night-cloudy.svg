@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f1c28"/>
+      <stop offset="60%" stop-color="#1c2e1e"/>
+      <stop offset="100%" stop-color="#162412"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e8d890" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#c0a050" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="moonFace" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#fff8e0"/>
+      <stop offset="70%" stop-color="#e8cc80"/>
+      <stop offset="100%" stop-color="#b89040"/>
+    </radialGradient>
+    <radialGradient id="cloudGrad" cx="38%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#5a6878"/>
+      <stop offset="100%" stop-color="#2a3540"/>
+    </radialGradient>
+    <filter id="moonGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="cloudShadow">
+      <feDropShadow dx="3" dy="6" stdDeviation="7" flood-color="#050c12" flood-opacity="0.5"/>
+    </filter>
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+    <filter id="starGlow">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Night sky -->
+  <rect width="200" height="200" fill="url(#nightSky)"/>
+
+  <!-- Moon glow behind cloud -->
+  <circle cx="80" cy="72" r="45" fill="url(#moonGlow)" opacity="0.7"/>
+
+  <!-- Crescent moon (partially visible) -->
+  <circle cx="78" cy="70" r="28" fill="url(#moonFace)" filter="url(#moonGlowFilter)"/>
+  <circle cx="90" cy="64" r="24" fill="#1c2e1e"/>
+
+  <!-- Stars peeking around cloud edges -->
+  <!-- Stars visible in upper area -->
+  <path d="M30 32 L31.5 27 L33 32 L38 32 L34 35 L35.5 40.5 L31.5 37.5 L27.5 40.5 L29 35 L25 32 Z" fill="#e8d890" opacity="0.8" filter="url(#starGlow)"/>
+  <path d="M145 22 L146.5 17.5 L148 22 L152.5 22 L149 25 L150.5 29.5 L146.5 27 L142.5 29.5 L144 25 L140.5 22 Z" fill="#f0dca8" opacity="0.75" filter="url(#starGlow)"/>
+  <circle cx="165" cy="40" r="2" fill="#e8d890" opacity="0.7" filter="url(#starGlow)"/>
+  <circle cx="18" cy="58" r="1.5" fill="#e8d890" opacity="0.65" filter="url(#starGlow)"/>
+  <circle cx="55" cy="20" r="1.5" fill="#f0dca8" opacity="0.7" filter="url(#starGlow)"/>
+  <circle cx="128" cy="14" r="1.2" fill="#e8d890" opacity="0.75" filter="url(#starGlow)"/>
+  <circle cx="182" cy="55" r="1.8" fill="#f0dca8" opacity="0.6" filter="url(#starGlow)"/>
+  <circle cx="172" cy="25" r="1" fill="#e8d890" opacity="0.7" filter="url(#starGlow)"/>
+  <!-- Tiny star cluster -->
+  <circle cx="105" cy="18" r="1" fill="#f5e6c8" opacity="0.6" filter="url(#starGlow)"/>
+  <circle cx="110" cy="24" r="0.8" fill="#f5e6c8" opacity="0.55" filter="url(#starGlow)"/>
+  <circle cx="98" cy="26" r="1" fill="#f5e6c8" opacity="0.6" filter="url(#starGlow)"/>
+
+  <!-- Dark blue-grey cloud (partially covering moon) -->
+  <g filter="url(#cloudShadow)">
+    <circle cx="108" cy="82" r="26" fill="url(#cloudGrad)"/>
+    <circle cx="134" cy="75" r="30" fill="url(#cloudGrad)"/>
+    <circle cx="158" cy="83" r="22" fill="url(#cloudGrad)"/>
+    <circle cx="90" cy="89" r="20" fill="url(#cloudGrad)"/>
+    <circle cx="174" cy="92" r="16" fill="url(#cloudGrad)"/>
+    <circle cx="120" cy="68" r="20" fill="url(#cloudGrad)"/>
+    <circle cx="146" cy="67" r="18" fill="url(#cloudGrad)"/>
+    <rect x="86" y="87" width="96" height="30" rx="8" fill="url(#cloudGrad)" filter="url(#softBlur)"/>
+  </g>
+  <!-- Subtle cloud edge highlight (moonlit) -->
+  <path d="M104 73 Q126 66 150 73" stroke="#7a8898" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Tree branch silhouette -->
+  <path d="M0 155 C10 150 22 148 30 155 C36 158 42 156 50 160 C58 164 62 158 72 158" stroke="#0a1408" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- Branch sub-branches -->
+  <path d="M20 153 C18 144 15 136 12 130" stroke="#0a1408" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M40 156 C42 148 44 140 48 134" stroke="#0a1408" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M56 159 C56 150 58 142 60 136" stroke="#0a1408" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Owl silhouette perched on branch -->
+  <g transform="translate(28, 120)">
+    <!-- Owl body -->
+    <path d="M-9 0 C-10 -8 -8 -18 0 -22 C8 -18 10 -8 9 0 C8 8 4 12 0 12 C-4 12 -8 8 -9 0 Z" fill="#0d1810"/>
+    <!-- Owl ear tufts -->
+    <path d="M-5 -20 C-5 -26 -8 -30 -6 -32 C-4 -30 -4 -26 -5 -20" fill="#0a1408"/>
+    <path d="M5 -20 C5 -26 8 -30 6 -32 C4 -30 4 -26 5 -20" fill="#0a1408"/>
+    <!-- Owl eyes (slightly lighter) -->
+    <circle cx="-4" cy="-12" r="4" fill="#162216"/>
+    <circle cx="4" cy="-12" r="4" fill="#162216"/>
+    <!-- Eye shine (moon reflection) -->
+    <circle cx="-3" cy="-13" r="1.5" fill="#7a9868" opacity="0.5"/>
+    <circle cx="5" cy="-13" r="1.5" fill="#7a9868" opacity="0.5"/>
+    <!-- Beak -->
+    <path d="M-1.5 -8 L0 -4 L1.5 -8 Z" fill="#1e2c1a"/>
+    <!-- Wing detail line -->
+    <path d="M-8 0 C-6 4 0 6 8 3" stroke="#162216" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- Feet on branch -->
+    <path d="M-4 11 C-5 15 -7 17 -9 18 M-4 11 C-3 16 -3 18 -3 19" stroke="#0a1408" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M4 11 C5 15 7 17 9 18 M4 11 C3 16 3 18 3 19" stroke="#0a1408" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Distant forest silhouette at bottom -->
+  <path d="M0 180 Q20 166 40 174 Q60 182 80 170 Q100 158 120 172 Q140 186 160 174 Q180 162 200 175 L200 200 L0 200 Z" fill="#0d1810"/>
+  <path d="M0 185 Q40 178 80 182 Q120 186 160 180 Q180 177 200 180 L200 200 L0 200 Z" fill="#0a1408"/>
+</svg>

@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1b2a"/>
+      <stop offset="50%" stop-color="#1a2e1a"/>
+      <stop offset="100%" stop-color="#1e3818"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f5e6c8" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#d4c090" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#c8a860" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="moonFace" cx="35%" cy="28%" r="65%">
+      <stop offset="0%" stop-color="#fff8e8"/>
+      <stop offset="70%" stop-color="#f0d898"/>
+      <stop offset="100%" stop-color="#c8a040"/>
+    </radialGradient>
+    <radialGradient id="fireflyGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ccff66" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#88cc00" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="moonGlowFilter" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="starGlow">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="fireflyFilter" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Deep night sky - forest green to dark navy gradient -->
+  <rect width="200" height="200" fill="url(#nightSky)"/>
+
+  <!-- Subtle tree silhouettes at bottom (dark forest) -->
+  <path d="M0 200 L0 150 Q10 130 20 150 Q30 130 40 148 Q50 128 60 146 Q70 130 80 148 Q90 132 100 150 Q110 133 120 149 Q130 128 140 147 Q150 128 160 147 Q170 130 180 148 Q190 130 200 150 L200 200 Z" fill="#0d1810" opacity="0.9"/>
+  <path d="M0 200 L0 158 Q10 144 20 158 Q30 144 40 155 Q50 140 60 154 Q70 142 80 156 Q90 144 100 158 L100 200 Z" fill="#0a1408" opacity="0.8"/>
+  <path d="M100 200 L100 158 Q110 142 120 156 Q130 140 140 154 Q150 141 160 155 Q170 142 180 156 Q190 143 200 158 L200 200 Z" fill="#0a1408" opacity="0.8"/>
+
+  <!-- Moon outer glow -->
+  <circle cx="130" cy="68" r="52" fill="url(#moonGlow)" opacity="0.8"/>
+  <circle cx="130" cy="68" r="40" fill="url(#moonGlow)" opacity="0.5"/>
+
+  <!-- Crescent moon: full circle minus offset circle (mask technique using path) -->
+  <!-- Full moon circle area -->
+  <circle cx="130" cy="68" r="32" fill="url(#moonFace)" filter="url(#moonGlowFilter)"/>
+  <!-- Mask (the "shadow" part of crescent) - slightly darker, offset -->
+  <circle cx="143" cy="62" r="28" fill="#1a2e1a"/>
+
+  <!-- Stars scattered around -->
+  <!-- 5-pointed stars of different sizes -->
+  <!-- Star 1 (medium, top-left area) -->
+  <g filter="url(#starGlow)">
+    <path d="M32 28 L34 22 L36 28 L42 28 L37 32 L39 38 L34 34 L29 38 L31 32 L26 28 Z" fill="#f5e6c8" opacity="0.9" transform="scale(0.7) translate(14, 12)"/>
+  </g>
+  <path d="M38 35 L39.2 31.5 L40.4 35 L44 35 L41.2 37.2 L42.4 40.8 L39.4 38.6 L36.4 40.8 L37.6 37.2 L34.8 35 Z" fill="#f5e6c8" opacity="0.8" filter="url(#starGlow)"/>
+
+  <!-- Star 2 (large, upper area) -->
+  <path d="M68 18 L70 12 L72 18 L78 18 L73 22 L75 28 L70 24 L65 28 L67 22 L62 18 Z" fill="#fff8e8" opacity="0.9" filter="url(#starGlow)"/>
+
+  <!-- Star 3 (small, right) -->
+  <path d="M174 35 L175 32 L176 35 L179 35 L177 37 L178 40 L175 38 L172 40 L173 37 L171 35 Z" fill="#f5e6c8" opacity="0.85" filter="url(#starGlow)"/>
+
+  <!-- Star 4 (medium, top center) -->
+  <path d="M108 22 L109.5 17 L111 22 L116 22 L112 25.5 L113.5 30.5 L109.5 27.5 L105.5 30.5 L107 25.5 L103 22 Z" fill="#f0dca8" opacity="0.8" filter="url(#starGlow)"/>
+
+  <!-- Star 5 (tiny, various positions) -->
+  <circle cx="22" cy="52" r="1.5" fill="#fff8e8" opacity="0.7" filter="url(#starGlow)"/>
+  <circle cx="55" cy="32" r="1.2" fill="#f5e6c8" opacity="0.75" filter="url(#starGlow)"/>
+  <circle cx="172" cy="55" r="1.5" fill="#f5e6c8" opacity="0.7" filter="url(#starGlow)"/>
+  <circle cx="185" cy="22" r="1" fill="#fff8e8" opacity="0.65" filter="url(#starGlow)"/>
+  <circle cx="15" cy="80" r="1.2" fill="#f5e6c8" opacity="0.6" filter="url(#starGlow)"/>
+  <circle cx="88" cy="12" r="1" fill="#fff8e8" opacity="0.7" filter="url(#starGlow)"/>
+  <circle cx="155" cy="18" r="1.5" fill="#f5e6c8" opacity="0.75" filter="url(#starGlow)"/>
+
+  <!-- Fireflies — glowing dots with light halos -->
+  <!-- Firefly 1 -->
+  <circle cx="35" cy="130" r="8" fill="#aaff44" opacity="0.1" filter="url(#fireflyFilter)"/>
+  <circle cx="35" cy="130" r="3" fill="#ccff66" opacity="0.25"/>
+  <circle cx="35" cy="130" r="1.5" fill="#eeff88" opacity="0.9"/>
+
+  <!-- Firefly 2 -->
+  <circle cx="52" cy="118" r="7" fill="#aaff44" opacity="0.1" filter="url(#fireflyFilter)"/>
+  <circle cx="52" cy="118" r="2.5" fill="#ccff66" opacity="0.22"/>
+  <circle cx="52" cy="118" r="1.2" fill="#eeff88" opacity="0.85"/>
+
+  <!-- Firefly 3 -->
+  <circle cx="22" cy="142" r="9" fill="#aaff44" opacity="0.12" filter="url(#fireflyFilter)"/>
+  <circle cx="22" cy="142" r="3" fill="#ccff66" opacity="0.28"/>
+  <circle cx="22" cy="142" r="1.5" fill="#ddff77" opacity="0.9"/>
+
+  <!-- Firefly 4 -->
+  <circle cx="165" cy="125" r="7" fill="#aaff44" opacity="0.1" filter="url(#fireflyFilter)"/>
+  <circle cx="165" cy="125" r="2.5" fill="#ccff66" opacity="0.22"/>
+  <circle cx="165" cy="125" r="1.2" fill="#eeff88" opacity="0.8"/>
+
+  <!-- Firefly 5 (brighter) -->
+  <circle cx="148" cy="140" r="9" fill="#aaff44" opacity="0.15" filter="url(#fireflyFilter)"/>
+  <circle cx="148" cy="140" r="3.5" fill="#bbff44" opacity="0.3"/>
+  <circle cx="148" cy="140" r="1.8" fill="#eeff88" opacity="0.95"/>
+
+  <!-- Firefly 6 -->
+  <circle cx="178" cy="108" r="6" fill="#aaff44" opacity="0.08" filter="url(#fireflyFilter)"/>
+  <circle cx="178" cy="108" r="2" fill="#ccff66" opacity="0.2"/>
+  <circle cx="178" cy="108" r="1" fill="#eeff88" opacity="0.75"/>
+</svg>

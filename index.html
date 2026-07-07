@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍄 Gnome Weather 🍄</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍄</text></svg>" />
+
+  <style>
+    /* ===========================
+       CSS CUSTOM PROPERTIES
+    =========================== */
+    :root {
+      --forest-green:   #4a7c59;
+      --deep-green:     #2d5a27;
+      --warm-brown:     #8b5e3c;
+      --dark-brown:     #6b4226;
+      --golden:         #d4a843;
+      --terracotta:     #c17f59;
+      --cream:          #f5f0e8;
+      --sky-blue:       #87ceeb;
+      --moss:           #5a7a3a;
+      --mushroom-red:   #c0392b;
+      --night-bg:       #0d1b2a;
+      --night-card:     #1a2d3e;
+      --night-text:     #d4e8f0;
+      --card-bg:        rgba(245, 240, 232, 0.92);
+      --shadow:         0 8px 32px rgba(45, 90, 39, 0.25);
+      --glow-color:     rgba(212, 168, 67, 0.4);
+      --transition:     all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===========================
+       RESET & BASE
+    =========================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 500;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: linear-gradient(160deg,
+        #c8e6a8 0%,
+        #a8d48a 15%,
+        #7ab85a 30%,
+        #5a9640 45%,
+        #4a7c59 60%,
+        #3a6045 75%,
+        #2d5a27 100%
+      );
+      color: #3a2a1a;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    body.night {
+      background: linear-gradient(160deg,
+        #0d1b2a 0%,
+        #111f30 20%,
+        #162840 40%,
+        #0f1e2d 60%,
+        #0a1520 80%,
+        #060e15 100%
+      );
+      color: var(--night-text);
+    }
+
+    /* ===========================
+       FLOATING FOREST PARTICLES
+    =========================== */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+
+    .leaf {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0;
+      animation: floatLeaf linear infinite;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    @keyframes floatLeaf {
+      0%   { transform: translateX(0) translateY(-60px) rotate(0deg); opacity: 0; }
+      5%   { opacity: 0.7; }
+      90%  { opacity: 0.5; }
+      100% { transform: translateX(var(--drift)) translateY(110vh) rotate(var(--spin)); opacity: 0; }
+    }
+
+    /* Stars (night only) */
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    /* Only animate in night mode — keeps stars hidden during day */
+    body.night .star {
+      animation: twinkle ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50%       { opacity: 1;   transform: scale(1.2); }
+    }
+
+    /* Rain drops */
+    .raindrop {
+      position: fixed;
+      top: -20px;
+      width: 2px;
+      border-radius: 2px;
+      background: linear-gradient(to bottom, transparent, rgba(135, 206, 235, 0.7));
+      animation: rain linear infinite;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body.raining .raindrop { opacity: 1; }
+    @keyframes rain {
+      0%   { transform: translateY(0) rotate(10deg); }
+      100% { transform: translateY(110vh) rotate(10deg); }
+    }
+
+    /* Snowflakes */
+    .snowflake {
+      position: fixed;
+      top: -20px;
+      font-size: 1rem;
+      animation: snowfall linear infinite;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body.snowing .snowflake { opacity: 0.85; }
+    @keyframes snowfall {
+      0%   { transform: translateY(0) translateX(0) rotate(0deg); }
+      50%  { transform: translateY(50vh) translateX(var(--swayX)) rotate(180deg); }
+      100% { transform: translateY(110vh) translateX(0) rotate(360deg); }
+    }
+
+    /* ===========================
+       MAIN LAYOUT
+    =========================== */
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ===========================
+       HEADER / TITLE
+    =========================== */
+    .site-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .site-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      color: var(--cream);
+      text-shadow:
+        3px 3px 0 var(--dark-brown),
+        0 0 30px rgba(212, 168, 67, 0.6),
+        0 0 60px rgba(212, 168, 67, 0.3);
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+    }
+
+    .site-subtitle {
+      font-size: 0.95rem;
+      color: rgba(245, 240, 232, 0.85);
+      margin-top: 0.4rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ===========================
+       SEARCH BAR
+    =========================== */
+    .search-wrap {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 1.5rem;
+      animation: fadeDown 0.8s 0.1s ease both;
+      position: relative;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 0;
+      background: var(--card-bg);
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+      border: 2px solid rgba(212, 168, 67, 0.4);
+      transition: var(--transition);
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--golden);
+      box-shadow: var(--shadow), 0 0 0 4px rgba(212, 168, 67, 0.2);
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 0.75rem 1.2rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #3a2a1a;
+    }
+
+    .search-input::placeholder { color: #a89070; font-weight: 500; }
+
+    .search-btn {
+      background: linear-gradient(135deg, var(--golden), var(--terracotta));
+      border: none;
+      padding: 0.75rem 1.2rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: filter 0.2s, transform 0.1s;
+      border-radius: 0 50px 50px 0;
+    }
+
+    .search-btn:hover  { filter: brightness(1.1); }
+    .search-btn:active { transform: scale(0.95); }
+
+    .location-btn {
+      background: none;
+      border: none;
+      padding: 0.75rem 0.9rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      opacity: 0.7;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .location-btn:hover { opacity: 1; transform: scale(1.15); }
+
+    /* Autocomplete dropdown */
+    .autocomplete {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0; right: 0;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      z-index: 100;
+      display: none;
+      border: 1px solid rgba(212, 168, 67, 0.3);
+    }
+    .autocomplete.open { display: block; animation: fadeDown 0.2s ease; }
+    .autocomplete-item {
+      padding: 0.7rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #3a2a1a;
+      transition: background 0.15s;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background: rgba(212, 168, 67, 0.15); }
+    .autocomplete-item .country { color: #a89070; font-size: 0.8rem; margin-left: 0.4rem; }
+
+    /* ===========================
+       MAIN CARD
+    =========================== */
+    .main-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card-bg);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      animation: cardPop 0.6s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      transition: var(--transition);
+    }
+
+    @keyframes cardPop {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Card pulse glow */
+    .main-card::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 35px;
+      background: linear-gradient(135deg, var(--golden), var(--forest-green), var(--terracotta));
+      z-index: -1;
+      opacity: 0.5;
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.3; filter: blur(8px); }
+      50%       { opacity: 0.7; filter: blur(12px); }
+    }
+
+    /* Card decorative corner mushrooms */
+    .main-card::after {
+      content: '🍄';
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 1.6rem;
+      opacity: 0.3;
+      filter: saturate(0.7);
+    }
+
+    body.night .main-card {
+      background: rgba(26, 45, 62, 0.95);
+      color: var(--night-text);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 60px rgba(100, 160, 255, 0.1);
+    }
+
+    /* ===========================
+       LOADING / ERROR / WELCOME
+    =========================== */
+    .state-display {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .state-emoji { font-size: 4rem; margin-bottom: 1rem; display: block; }
+
+    .state-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: var(--dark-brown);
+      margin-bottom: 0.5rem;
+    }
+
+    body.night .state-title { color: var(--sky-blue); }
+
+    .state-msg {
+      font-size: 0.95rem;
+      color: #6b5a40;
+      line-height: 1.6;
+    }
+    body.night .state-msg { color: #a8c8d8; }
+
+    .spinner {
+      display: inline-block;
+      width: 3rem; height: 3rem;
+      border: 4px solid rgba(212, 168, 67, 0.3);
+      border-top-color: var(--golden);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===========================
+       WEATHER DISPLAY
+    =========================== */
+    .weather-display { animation: fadeIn 0.5s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Location & date */
+    .location-name {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: var(--dark-brown);
+      text-align: center;
+      margin-bottom: 0.15rem;
+      line-height: 1.2;
+    }
+    body.night .location-name { color: var(--sky-blue); }
+
+    .location-date {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #a89070;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    body.night .location-date { color: #7090a8; }
+
+    /* Gnome + temperature row */
+    .hero-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    /* Gnome character wrapper */
+    .gnome-wrap {
+      flex-shrink: 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ===========================
+       GNOME COSTUME SYSTEM 🧙
+    =========================== */
+    .gnome-costume {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      filter: drop-shadow(2px 4px 10px rgba(0,0,0,0.35));
+      user-select: none;
+      transition: filter 0.2s ease;
+      width: 190px;
+      height: 190px;
+      justify-content: center;
+    }
+    .gnome-costume:hover {
+      filter: drop-shadow(2px 4px 16px rgba(0,0,0,0.45)) brightness(1.06);
+    }
+
+    #gnomeImg {
+      width: 190px;
+      height: 190px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Gnome title label */
+    .gnome-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.72rem;
+      color: var(--forest-green);
+      text-align: center;
+      margin-top: 0.45rem;
+      font-style: italic;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      max-width: 130px;
+      line-height: 1.35;
+      transition: color 0.4s ease;
+    }
+    body.night .gnome-title { color: var(--sky-blue); }
+
+    /* ===========================
+       GNOME ANIMATIONS (on costume div)
+    =========================== */
+    .gnome-costume.bounce {
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50%       { transform: translateY(-13px) rotate(4deg); }
+    }
+
+    .gnome-costume.wiggle {
+      animation: wiggle 0.65s ease-in-out infinite;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-9deg); }
+      50%       { transform: rotate(9deg); }
+    }
+
+    .gnome-costume.tremble {
+      animation: tremble 0.15s linear infinite;
+    }
+    @keyframes tremble {
+      0%   { transform: translateX(-2px) rotate(-5deg); }
+      25%  { transform: translateX(2px)  rotate(5deg);  }
+      50%  { transform: translateX(-3px) rotate(-5deg); }
+      75%  { transform: translateX(3px)  rotate(5deg);  }
+      100% { transform: translateX(-2px) rotate(-5deg); }
+    }
+
+    .gnome-costume.float {
+      animation: float 3.2s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      40%       { transform: translateY(-10px) rotate(3deg); }
+      70%       { transform: translateY(-5px) rotate(-2deg); }
+    }
+
+    .gnome-costume.sway {
+      animation: sway 2.2s ease-in-out infinite;
+    }
+    @keyframes sway {
+      0%, 100% { transform: rotate(0deg); }
+      25%       { transform: rotate(-11deg); }
+      75%       { transform: rotate(11deg); }
+    }
+
+    .gnome-costume.sleep {
+      animation: sleepBob 4s ease-in-out infinite;
+      opacity: 0.85;
+    }
+    @keyframes sleepBob {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%       { transform: translateY(5px) rotate(3deg); }
+    }
+
+    /* Re-roll pop animation — overrides everything while active */
+    @keyframes gnomePop {
+      0%   { transform: scale(0.4) rotate(-8deg); opacity: 0.6; }
+      55%  { transform: scale(1.28) rotate(4deg); opacity: 1;   }
+      75%  { transform: scale(0.9) rotate(-2deg);  opacity: 1;   }
+      88%  { transform: scale(1.06) rotate(1deg);  opacity: 1;   }
+      100% { transform: scale(1) rotate(0deg);     opacity: 1;   }
+    }
+    .gnome-costume.popping {
+      animation: gnomePop 0.48s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+    }
+
+    /* Temperature */
+    .temp-section { text-align: center; flex: 1; }
+
+    .temp-main {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(3.5rem, 10vw, 5rem);
+      line-height: 1;
+      color: var(--dark-brown);
+      transition: var(--transition);
+    }
+    body.night .temp-main { color: #e8f4ff; }
+
+    .temp-unit-toggle {
+      display: inline-flex;
+      gap: 0.3rem;
+      margin-top: 0.3rem;
+      background: rgba(139, 94, 60, 0.12);
+      border-radius: 20px;
+      padding: 3px;
+    }
+
+    .unit-btn {
+      background: none;
+      border: none;
+      padding: 0.2rem 0.6rem;
+      border-radius: 16px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #a89070;
+      transition: all 0.2s;
+    }
+    .unit-btn.active {
+      background: var(--golden);
+      color: var(--dark-brown);
+      box-shadow: 0 2px 6px rgba(212,168,67,0.4);
+    }
+
+    /* Weather icon (emoji) */
+    .weather-icon-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .weather-icon {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%       { transform: translateY(-6px) scale(1.05); }
+    }
+
+    /* Description */
+    .weather-desc {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin: 0.8rem 0 1.2rem;
+      padding: 0.6rem 1rem;
+      background: rgba(74, 124, 89, 0.1);
+      border-radius: 16px;
+      border-left: 3px solid var(--forest-green);
+      line-height: 1.4;
+      font-style: italic;
+    }
+    body.night .weather-desc {
+      color: #90d4a8;
+      background: rgba(100, 200, 140, 0.1);
+      border-left-color: #90d4a8;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .stat-card {
+      background: rgba(139, 94, 60, 0.08);
+      border-radius: 16px;
+      padding: 0.8rem 1rem;
+      text-align: center;
+      border: 1px solid rgba(212, 168, 67, 0.2);
+      transition: var(--transition);
+    }
+    body.night .stat-card {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(100,150,200,0.2);
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+    .stat-icon { width: 36px; height: 36px; object-fit: contain; display: block; margin-bottom: 0.3rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a89070;
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+    body.night .stat-label { color: #6888a0; }
+    .stat-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark-brown);
+    }
+    body.night .stat-value { color: #d0e8ff; }
+
+    /* Sun times */
+    .sun-row {
+      display: flex;
+      justify-content: space-around;
+      background: linear-gradient(135deg, rgba(212,168,67,0.15), rgba(193,127,89,0.1));
+      border-radius: 16px;
+      padding: 0.8rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(212,168,67,0.25);
+    }
+    body.night .sun-row {
+      background: linear-gradient(135deg, rgba(30,60,100,0.4), rgba(20,40,80,0.3));
+      border-color: rgba(100,140,200,0.2);
+    }
+
+    .sun-item { text-align: center; }
+    .sun-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #c0904a;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    body.night .sun-label { color: #90b0d0; }
+    .sun-time {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark-brown);
+    }
+    body.night .sun-time { color: #c0d8f0; }
+    .sun-icon { width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15)); }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,168,67,0.4), transparent);
+      margin: 0.5rem 0 1.2rem;
+    }
+
+    /* ===========================
+       FORECAST
+    =========================== */
+    .forecast-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.1rem;
+      color: var(--dark-brown);
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+    body.night .forecast-title { color: var(--sky-blue); }
+
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+
+    .forecast-card {
+      background: rgba(139, 94, 60, 0.08);
+      border-radius: 16px;
+      padding: 0.7rem 0.4rem;
+      text-align: center;
+      border: 1px solid rgba(212,168,67,0.2);
+      cursor: default;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    body.night .forecast-card {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(100,150,200,0.15);
+    }
+    .forecast-card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      border-color: var(--golden);
+    }
+
+    .forecast-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 6px;
+      background: linear-gradient(90deg, transparent, var(--mushroom-red), transparent);
+      border-radius: 0 0 4px 4px;
+      opacity: 0.5;
+    }
+
+    .forecast-day {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #a89070;
+      margin-bottom: 0.3rem;
+    }
+    body.night .forecast-day { color: #6888a0; }
+
+    .forecast-icon { width: 44px; height: 44px; object-fit: contain; display: block; margin: 0.3rem auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+
+    .forecast-temps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      align-items: center;
+    }
+
+    .temp-high {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--dark-brown);
+    }
+    body.night .temp-high { color: #e0f0ff; }
+    .temp-low {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #a89070;
+    }
+    body.night .temp-low { color: #608090; }
+
+    /* ===========================
+       FOOTER
+    =========================== */
+    .site-footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(245, 240, 232, 0.7);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      animation: fadeIn 1s 0.5s ease both;
+    }
+    body.night .site-footer { color: rgba(180, 210, 230, 0.5); }
+
+    /* ===========================
+       RESPONSIVE
+    =========================== */
+    @media (max-width: 400px) {
+      .main-card { padding: 1.5rem 1rem; }
+      .forecast-grid { grid-template-columns: repeat(5, 1fr); gap: 0.3rem; }
+      .forecast-card { padding: 0.5rem 0.2rem; }
+      .forecast-icon { font-size: 1.3rem; }
+      .hero-row { gap: 0.5rem; }
+      .gnome-costume { width: 150px; height: 150px; }
+      #gnomeImg { width: 150px; height: 150px; }
+    }
+
+    /* ===========================
+       NIGHT MOON DECORATION
+    =========================== */
+    .moon {
+      position: fixed;
+      top: 40px;
+      right: 60px;
+      font-size: 3rem;
+      opacity: 0;
+      filter: drop-shadow(0 0 20px rgba(255,255,200,0.8));
+      transition: opacity 1s ease;
+      pointer-events: none;
+      z-index: 0;
+      animation: moonGlow 4s ease-in-out infinite;
+    }
+    body.night .moon { opacity: 1; }
+    @keyframes moonGlow {
+      0%, 100% { filter: drop-shadow(0 0 15px rgba(255,255,180,0.6)); }
+      50%       { filter: drop-shadow(0 0 30px rgba(255,255,180,0.9)); }
+    }
+
+    /* Sun decoration (day) */
+    .sun-deco {
+      position: fixed;
+      top: 30px;
+      right: 50px;
+      font-size: 3rem;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      animation: sunSpin 20s linear infinite, sunGlow 3s ease-in-out infinite;
+      transition: opacity 1s ease;
+    }
+    body:not(.night) .sun-deco { opacity: 0.8; }
+    @keyframes sunSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes sunGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(255,220,50,0.5)); }
+      50%       { filter: drop-shadow(0 0 25px rgba(255,220,50,0.9)); }
+    }
+
+    /* ===========================
+       FADE-IN UTILITY
+    =========================== */
+    .fade-in { animation: fadeIn 0.4s ease; }
+  </style>
+</head>
+<body>
+  <!-- Ambient decorations -->
+  <div class="particles" id="particles"></div>
+  <div class="moon">🌙</div>
+  <div class="sun-deco">☀️</div>
+
+  <div class="app">
+    <!-- Header -->
+    <header class="site-header">
+      <h1 class="site-title">🍄 Gnome Weather 🍄</h1>
+      <p class="site-subtitle">✨ A forest fairy tale forecast ✨</p>
+    </header>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <div class="search-bar">
+        <button class="location-btn" id="locBtn" title="Use my location" aria-label="Detect location">📍</button>
+        <input
+          class="search-input"
+          id="searchInput"
+          type="text"
+          placeholder="Where in the forest do you dwell?"
+          autocomplete="off"
+          aria-label="Search city"
+        />
+        <button class="search-btn" id="searchBtn" aria-label="Search">🔍</button>
+      </div>
+      <div class="autocomplete" id="autocomplete"></div>
+    </div>
+
+    <!-- Main card -->
+    <main class="main-card" id="mainCard" role="main">
+      <!-- Welcome state (default) -->
+      <div class="state-display" id="welcomeState">
+        <span class="state-emoji">🧙</span>
+        <h2 class="state-title">Greetings, forest wanderer!</h2>
+        <p class="state-msg">
+          The gnome council invites you to share your whereabouts.<br/>
+          Allow location access, or search for your enchanted village above! 🌿
+        </p>
+      </div>
+
+      <!-- Loading state -->
+      <div class="state-display" id="loadingState" style="display:none">
+        <div class="spinner"></div>
+        <h2 class="state-title">The gnomes are consulting the clouds…</h2>
+        <p class="state-msg">One moment, woodland magic is at work 🍃</p>
+      </div>
+
+      <!-- Error state -->
+      <div class="state-display" id="errorState" style="display:none">
+        <span class="state-emoji">🔮</span>
+        <h2 class="state-title">The crystal ball is foggy…</h2>
+        <p class="state-msg" id="errorMsg">Please try again 🔮</p>
+      </div>
+
+      <!-- Weather display -->
+      <div class="weather-display" id="weatherDisplay" style="display:none">
+        <div class="location-name" id="locName"></div>
+        <div class="location-date" id="locDate"></div>
+
+        <div class="hero-row">
+          <!-- ✨ GNOME PORTRAIT ✨ -->
+          <div class="gnome-wrap">
+            <div class="gnome-costume bounce" id="gnomeCostume" aria-label="Click for a new gnome!" title="Click to summon a new gnome 🎲" onclick="rerollGnome()" style="cursor:pointer">
+              <img id="gnomeImg" src="icons/sunny.webp" alt="Weather gnome" />
+            </div>
+            <div class="gnome-title" id="gnomeLabel">Forest Gnome</div>
+          </div>
+
+          <div class="temp-section">
+            <div class="temp-main" id="tempMain">--°</div>
+            <div class="temp-unit-toggle">
+              <button class="unit-btn active" id="btnC" onclick="setUnit('C')">°C</button>
+              <button class="unit-btn" id="btnF" onclick="setUnit('F')">°F</button>
+            </div>
+          </div>
+
+          <div class="weather-icon-wrap">
+            <img class="weather-icon" id="weatherIcon" src="icons/cloudy.svg" alt="Weather">
+          </div>
+        </div>
+
+        <div class="weather-desc" id="weatherDesc"></div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <img class="stat-icon" src="icons/thermometer.svg" alt="Temperature" width="32" height="32">
+            <span class="stat-label">Feels Like</span>
+            <span class="stat-value" id="feelsLike">--</span>
+          </div>
+          <div class="stat-card">
+            <img class="stat-icon" src="icons/humidity.svg" alt="Humidity" width="32" height="32">
+            <span class="stat-label">Humidity</span>
+            <span class="stat-value" id="humidity">--</span>
+          </div>
+          <div class="stat-card">
+            <img class="stat-icon" src="icons/wind.svg" alt="Wind" width="32" height="32">
+            <span class="stat-label">Wind</span>
+            <span class="stat-value" id="windSpeed">--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">↕️</span>
+            <span class="stat-label">High / Low</span>
+            <span class="stat-value" id="highLow">--</span>
+          </div>
+        </div>
+
+        <div class="sun-row">
+          <div class="sun-item">
+            <img class="sun-icon" src="icons/sunrise.svg" alt="Sunrise" width="40" height="40">
+            <span class="sun-label">Sunrise</span>
+            <span class="sun-time" id="sunrise">--:--</span>
+          </div>
+          <div class="sun-item" style="font-size:1.4rem; line-height:1; opacity:0.5">✦</div>
+          <div class="sun-item">
+            <img class="sun-icon" src="icons/sunset.svg" alt="Sunset" width="40" height="40">
+            <span class="sun-label">Sunset</span>
+            <span class="sun-time" id="sunset">--:--</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="forecast-title">🍄 The Coming Days 🍄</div>
+        <div class="forecast-grid" id="forecastGrid"></div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      Made with 🍄 and forest magic &nbsp;·&nbsp; Powered by Open-Meteo
+    </footer>
+  </div>
+
+  <script>
+    // =========================================================
+    //  STATE
+    // =========================================================
+    let currentWeatherData = null;
+    let currentUnit        = 'C'; // 'C' or 'F'
+    let geoResults         = [];
+    let currentGnomeCode   = 0;
+    let currentGnomeIsDay  = true;
+
+    // =========================================================
+    //  GNOME IMAGE MAPPING
+    // =========================================================
+    const GNOME_VARIANTS = {
+      sunny:  ['icons/sunny.webp', 'icons/variants/sunny_2.webp', 'icons/variants/sunny_3.webp', 'icons/variants/sunny_4.webp'],
+      cloudy: ['icons/cloudy.webp', 'icons/variants/cloudy_2.webp', 'icons/variants/cloudy_3.webp'],
+      rainy:  ['icons/rainy.webp', 'icons/variants/rainy_2.webp', 'icons/variants/rainy_3.webp', 'icons/variants/rainy_4.webp'],
+      snowy:  ['icons/snowy.webp', 'icons/variants/snowy_2.webp', 'icons/variants/snowy_3.webp', 'icons/variants/snowy_4.webp'],
+      stormy: ['icons/stormy.webp', 'icons/variants/stormy_2.webp', 'icons/variants/stormy_3.webp'],
+      foggy:  ['icons/foggy.webp', 'icons/variants/foggy_2.webp', 'icons/variants/foggy_3.webp'],
+      night:  ['icons/night.webp', 'icons/variants/night_2.webp', 'icons/variants/night_3.webp', 'icons/variants/night_4.webp'],
+    };
+
+    // Track current key for reroll
+    let _currentGnomeKey = 'sunny';
+    let _currentGnomeIdx = 0;
+
+    function pickGnome(key, idx) {
+      const pool = GNOME_VARIANTS[key] || ['icons/sunny.webp'];
+      const i = (idx !== undefined) ? idx : Math.floor(Math.random() * pool.length);
+      _currentGnomeKey = key;
+      _currentGnomeIdx = i;
+      return pool[i % pool.length];
+    }
+
+    function weatherCodeToGnome(code, isNight) {
+      if (isNight) return 'night';
+      if (code === 0 || code === 1) return 'sunny';
+      if (code === 2 || code === 3) return 'cloudy';
+      if (code === 45 || code === 48) return 'foggy';
+      if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'rainy';
+      if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'snowy';
+      if (code >= 95) return 'stormy';
+      return 'cloudy';
+    }
+
+    // =========================================================
+    //  PARTICLES — leaves and stars
+    // =========================================================
+    (function initParticles() {
+      const container = document.getElementById('particles');
+      const LEAVES    = ['🍃', '🍂', '🍀', '🌿', '🍁'];
+      const COUNT     = 18;
+
+      for (let i = 0; i < COUNT; i++) {
+        const el = document.createElement('div');
+        el.className = 'leaf';
+        el.textContent = LEAVES[Math.floor(Math.random() * LEAVES.length)];
+        const left  = Math.random() * 105;
+        const dur   = 12 + Math.random() * 20;
+        const delay = Math.random() * -dur;
+        const drift = (Math.random() - 0.5) * 200 + 'px';
+        const spin  = (Math.random() * 720 - 360) + 'deg';
+        el.style.cssText = `
+          left: ${left}%;
+          animation-duration: ${dur}s;
+          animation-delay: ${delay}s;
+          font-size: ${0.8 + Math.random() * 0.8}rem;
+          --drift: ${drift};
+          --spin: ${spin};
+        `;
+        container.appendChild(el);
+      }
+
+      // Stars
+      for (let i = 0; i < 80; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = 1 + Math.random() * 2.5;
+        star.style.cssText = `
+          left: ${Math.random() * 100}%;
+          top: ${Math.random() * 90}%;
+          width: ${size}px;
+          height: ${size}px;
+          animation-duration: ${1.5 + Math.random() * 3}s;
+          animation-delay: ${Math.random() * -4}s;
+        `;
+        container.appendChild(star);
+      }
+    })();
+
+    // =========================================================
+    //  RAIN / SNOW PARTICLES
+    // =========================================================
+    function createRainDrops() {
+      clearWeatherParticles('raindrop');
+      for (let i = 0; i < 60; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'raindrop';
+        const h = 15 + Math.random() * 40;
+        drop.style.cssText = `
+          left: ${Math.random() * 100}%;
+          height: ${h}px;
+          animation-duration: ${0.5 + Math.random() * 0.8}s;
+          animation-delay: ${Math.random() * -2}s;
+        `;
+        document.body.appendChild(drop);
+      }
+    }
+
+    function createSnowflakes() {
+      clearWeatherParticles('snowflake');
+      const flakes = ['❄️','✼','❅','✦'];
+      for (let i = 0; i < 30; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        flake.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+        const swayX = (Math.random() - 0.5) * 100 + 'px';
+        flake.style.cssText = `
+          left: ${Math.random() * 100}%;
+          animation-duration: ${4 + Math.random() * 6}s;
+          animation-delay: ${Math.random() * -8}s;
+          font-size: ${0.6 + Math.random() * 0.7}rem;
+          --swayX: ${swayX};
+        `;
+        document.body.appendChild(flake);
+      }
+    }
+
+    function clearWeatherParticles(cls) {
+      document.querySelectorAll('.' + cls).forEach(e => e.remove());
+    }
+
+    // =========================================================
+    //  🧙 RENDER GNOME IMAGE — swaps the illustration
+    // =========================================================
+    const GNOME_LABELS = {
+      sunny:  'Sunny Day Gnome ☀️',
+      cloudy: 'Cloudy Sky Gnome ⛅',
+      rainy:  'Rainy Day Gnome 🌧️',
+      snowy:  'Winter Gnome ❄️',
+      stormy: 'Storm Gnome ⚡',
+      foggy:  'Misty Gnome 🌫️',
+      night:  'Night Gnome 🌙',
+    };
+
+    function renderGnomeCostume(code, isDay) {
+      const gnomeKey = weatherCodeToGnome(code, !isDay);
+      const src = pickGnome(gnomeKey);
+      document.getElementById('gnomeImg').src = src;
+      document.getElementById('gnomeLabel').textContent = GNOME_LABELS[gnomeKey] || 'Forest Gnome';
+
+      // Bounce animation
+      const costumeEl = document.getElementById('gnomeCostume');
+      costumeEl.className = 'gnome-costume';
+      void costumeEl.offsetHeight;
+      costumeEl.classList.add('bounce');
+    }
+
+    function rerollGnome() {
+      const pool = GNOME_VARIANTS[_currentGnomeKey] || [];
+      if (pool.length <= 1) return;
+      // Pick a different index
+      let idx;
+      do { idx = Math.floor(Math.random() * pool.length); } while (idx === _currentGnomeIdx && pool.length > 1);
+      const src = pickGnome(_currentGnomeKey, idx);
+      const img = document.getElementById('gnomeImg');
+      img.src = src;
+      // Bounce
+      const costumeEl = document.getElementById('gnomeCostume');
+      costumeEl.classList.remove('bounce');
+      void costumeEl.offsetHeight;
+      costumeEl.classList.add('bounce');
+      // Toast
+      showToast('✨ A new gnome appears!');
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById('gnomeToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'gnomeToast';
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(60,40,20,0.88);color:#f5e6c8;padding:10px 22px;border-radius:24px;font-family:Georgia,serif;font-size:14px;pointer-events:none;opacity:0;transition:opacity 0.3s;z-index:9999;';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.style.opacity = '1';
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 1800);
+    }
+
+    // =========================================================
+    //  GNOME WEATHER MAPPINGS (icon, desc, anim for the card)
+    // =========================================================
+    const WMO = {
+      0:  { icon: '☀️',  desc: 'The sun blesses the forest today! ✨',          anim: 'bounce' },
+      1:  { icon: '🌤️',  desc: 'A ray of hope peeks through the branches! 🌿',  anim: 'bounce' },
+      2:  { icon: '⛅',   desc: 'A few clouds drift over the mushroom patch 🍄',  anim: 'sway'   },
+      3:  { icon: '☁️',  desc: 'The sky wears its grey cloak today 🌫️',          anim: 'sway'   },
+      45: { icon: '🌫️', desc: 'The forest spirits are out and about 🌫️',         anim: 'float'  },
+      48: { icon: '🌫️', desc: 'The forest spirits are out and about 🌫️',         anim: 'float'  },
+      51: { icon: '🌦️', desc: 'A gentle blessing from the rain gnomes 🌦️',       anim: 'sway'   },
+      53: { icon: '🌦️', desc: 'A gentle blessing from the rain gnomes 🌦️',       anim: 'sway'   },
+      55: { icon: '🌧️', desc: 'Perfect mushroom-growing weather! 🌧️',            anim: 'wiggle' },
+      56: { icon: '🌨️', desc: 'The gnomes are skating on icy drizzle today 🧊',  anim: 'sway'   },
+      57: { icon: '🌨️', desc: 'The gnomes are skating on icy drizzle today 🧊',  anim: 'wiggle' },
+      61: { icon: '🌧️', desc: 'Perfect mushroom-growing weather! 🌧️',            anim: 'wiggle' },
+      63: { icon: '🌧️', desc: 'Perfect mushroom-growing weather! 🌧️',            anim: 'wiggle' },
+      65: { icon: '🌧️', desc: 'Even gnomes stay inside today 🏠',                anim: 'wiggle' },
+      66: { icon: '🌨️', desc: 'Nature\'s own skating rink has opened! ❄️',        anim: 'wiggle' },
+      67: { icon: '🌨️', desc: 'Nature\'s own skating rink has opened! ❄️',        anim: 'wiggle' },
+      71: { icon: '🌨️', desc: 'The Great Winter Gnome has arrived! ❄️',          anim: 'bounce' },
+      73: { icon: '❄️',  desc: 'The Great Winter Gnome has arrived! ❄️',          anim: 'bounce' },
+      75: { icon: '❄️',  desc: 'The Great Winter Gnome has arrived! ❄️',          anim: 'bounce' },
+      77: { icon: '❄️',  desc: 'Tiny ice crystals dance from the sky! ❄️',         anim: 'float'  },
+      80: { icon: '🌦️', desc: 'A gentle blessing from the rain gnomes 🌦️',       anim: 'sway'   },
+      81: { icon: '🌧️', desc: 'Perfect mushroom-growing weather! 🌧️',            anim: 'wiggle' },
+      82: { icon: '🌧️', desc: 'Even gnomes stay inside today 🏠',                anim: 'wiggle' },
+      85: { icon: '🌨️', desc: 'The Great Winter Gnome has arrived! ❄️',          anim: 'bounce' },
+      86: { icon: '❄️',  desc: 'Heavy snow — the gnomes build mighty snowforts! ❄️', anim: 'bounce' },
+      95: { icon: '⛈️',  desc: 'By the gnomes! Thunder from the mountain! ⚡',   anim: 'tremble'},
+      96: { icon: '⛈️',  desc: 'By the gnomes! Thunder from the mountain! ⚡',   anim: 'tremble'},
+      99: { icon: '🌩️', desc: 'By the gnomes! Thunder from the mountain! ⚡',    anim: 'tremble'},
+    };
+
+    const NIGHT_WMO = {
+      0: { icon: '🌙', desc: 'The stars keep watch over the forest tonight 🌟', anim: 'sleep' },
+      1: { icon: '🌙', desc: 'The stars keep watch over the forest tonight 🌟', anim: 'sleep' },
+    };
+
+    const DAY_NAMES   = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const MONTH_NAMES = ['January','February','March','April','May','June',
+                         'July','August','September','October','November','December'];
+
+    // SVG icon mapping
+    const WMO_ICON_MAP = {
+      0: 'sunny', 1: 'sunny',
+      2: 'partly-cloudy', 3: 'cloudy',
+      45: 'fog', 48: 'fog',
+      51: 'drizzle', 53: 'drizzle', 55: 'drizzle',
+      61: 'rain', 63: 'rain', 65: 'heavy-rain',
+      71: 'snow', 73: 'snow', 75: 'snow',
+      80: 'drizzle', 81: 'rain', 82: 'heavy-rain',
+      95: 'storm', 96: 'storm', 99: 'storm'
+    };
+    function getIconSrc(code, isDay) {
+      if (!isDay) return code <= 1 ? 'icons/night-clear.svg' : 'icons/night-cloudy.svg';
+      return 'icons/' + (WMO_ICON_MAP[code] || 'cloudy') + '.svg';
+    }
+
+    function getWMOData(code, isDay) {
+      if (!isDay && (code === 0 || code === 1)) {
+        return NIGHT_WMO[code] || NIGHT_WMO[0];
+      }
+      return WMO[code] || WMO[0];
+    }
+
+    // =========================================================
+    //  UNIT CONVERSION
+    // =========================================================
+    function cToF(c) { return (c * 9/5) + 32; }
+
+    function formatTemp(c) {
+      if (currentUnit === 'C') return Math.round(c) + '°C';
+      return Math.round(cToF(c)) + '°F';
+    }
+
+    // Wind stored as km/h from API; display in km/h (metric) or mph (imperial)
+    function formatWind(kmh) {
+      if (currentUnit === 'F') return Math.round(kmh * 0.621371) + ' mph';
+      return Math.round(kmh) + ' km/h';
+    }
+
+    function setUnit(unit) {
+      currentUnit = unit;
+      document.getElementById('btnC').classList.toggle('active', unit === 'C');
+      document.getElementById('btnF').classList.toggle('active', unit === 'F');
+      if (currentWeatherData) renderWeather(currentWeatherData);
+    }
+
+    // =========================================================
+    //  RENDER WEATHER
+    // =========================================================
+    function renderWeather(data) {
+      const cur   = data.current;
+      const daily = data.daily;
+      const isDay = cur.is_day === 1;
+      const code  = cur.weather_code;
+      const wmo   = getWMOData(code, isDay);
+
+      // Day/night body class
+      document.body.classList.toggle('night', !isDay);
+
+      // Precipitation animations
+      const isRain = [51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(code);
+      const isSnow = [71,73,75,77,85,86].includes(code);
+      document.body.classList.toggle('raining', isRain);
+      document.body.classList.toggle('snowing', isSnow);
+
+      if (isRain) createRainDrops();
+      else clearWeatherParticles('raindrop');
+
+      if (isSnow) createSnowflakes();
+      else clearWeatherParticles('snowflake');
+
+      // Location
+      document.getElementById('locName').textContent =
+        data.locationName || 'Enchanted Village';
+
+      // Date
+      const now = new Date();
+      document.getElementById('locDate').textContent =
+        `${DAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+
+      // ✨ GNOME IMAGE — update illustration
+      currentGnomeCode  = code;
+      currentGnomeIsDay = isDay;
+      renderGnomeCostume(code, isDay);
+
+      // Temperature
+      document.getElementById('tempMain').textContent = formatTemp(cur.temperature_2m);
+
+      // Icon
+      document.getElementById('weatherIcon').src = getIconSrc(code, isDay);
+
+      // Description
+      document.getElementById('weatherDesc').textContent = wmo.desc;
+
+      // Stats
+      document.getElementById('feelsLike').textContent = formatTemp(cur.apparent_temperature);
+      document.getElementById('humidity').textContent  = cur.relative_humidity_2m + '%';
+      document.getElementById('windSpeed').textContent = formatWind(cur.wind_speed_10m);
+      document.getElementById('highLow').textContent   =
+        formatTemp(daily.temperature_2m_max[0]) + ' / ' + formatTemp(daily.temperature_2m_min[0]);
+
+      // Sun times
+      document.getElementById('sunrise').textContent = formatTime(daily.sunrise[0]);
+      document.getElementById('sunset').textContent  = formatTime(daily.sunset[0]);
+
+      // Forecast
+      renderForecast(data);
+
+      // Show weather, hide others
+      showState('weather');
+    }
+
+    function renderForecast(data) {
+      const daily = data.daily;
+      const grid  = document.getElementById('forecastGrid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < Math.min(5, daily.time.length); i++) {
+        const d      = new Date(daily.time[i] + 'T12:00:00');
+        const code   = daily.weather_code[i];
+        const wmo    = WMO[code] || WMO[0];
+        const isToday = i === 0;
+
+        const card = document.createElement('div');
+        card.className = 'forecast-card fade-in';
+        card.style.animationDelay = (i * 0.07) + 's';
+        card.innerHTML = `
+          <div class="forecast-day">${isToday ? 'Today' : DAY_NAMES[d.getDay()]}</div>
+          <img class="forecast-icon" src="${getIconSrc(code, true)}" alt="weather" width="44" height="44">
+          <div class="forecast-temps">
+            <span class="temp-high">${formatTemp(daily.temperature_2m_max[i])}</span>
+            <span class="temp-low">${formatTemp(daily.temperature_2m_min[i])}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+    }
+
+    function formatTime(iso) {
+      if (!iso) return '--:--';
+      const d = new Date(iso);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    }
+
+    // =========================================================
+    //  STATE DISPLAY
+    // =========================================================
+    function showState(state) {
+      document.getElementById('welcomeState').style.display   = state === 'welcome'  ? '' : 'none';
+      document.getElementById('loadingState').style.display   = state === 'loading'  ? '' : 'none';
+      document.getElementById('errorState').style.display     = state === 'error'    ? '' : 'none';
+      document.getElementById('weatherDisplay').style.display = state === 'weather'  ? '' : 'none';
+    }
+
+    function showError(msg) {
+      document.getElementById('errorMsg').textContent = msg || 'Please try again 🔮';
+      showState('error');
+    }
+
+    // =========================================================
+    //  API CALLS
+    // =========================================================
+    async function fetchWeather(lat, lon, name) {
+      showState('loading');
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&temperature_unit=celsius&wind_speed_unit=kmh&timezone=auto&forecast_days=5`;
+        const res  = await fetch(url);
+        if (!res.ok) throw new Error('Weather fetch failed');
+        const data = await res.json();
+        data.locationName = name || 'Enchanted Village';
+        currentWeatherData = data;
+        renderWeather(data);
+      } catch (e) {
+        showError('The crystal ball is foggy… ' + (e.message || 'Please try again 🔮'));
+      }
+    }
+
+    async function searchCity(query) {
+      const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`;
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error('No results found');
+      const data = await res.json();
+      return data.results || [];
+    }
+
+    // =========================================================
+    //  GEOLOCATION
+    // =========================================================
+    function detectLocation() {
+      if (!navigator.geolocation) {
+        showError("The gnomes can't find your location 🧭 — please search instead!");
+        return;
+      }
+      showState('loading');
+      navigator.geolocation.getCurrentPosition(
+        async pos => {
+          const { latitude: lat, longitude: lon } = pos.coords;
+          try {
+            const name = await reverseGeocode(lat, lon);
+            fetchWeather(lat, lon, name);
+          } catch {
+            fetchWeather(lat, lon, 'Your Forest');
+          }
+        },
+        err => {
+          let msg = 'The gnomes could not find you 🧭 — please search for your village above!';
+          if (err.code === 1) msg = 'Location permission denied by the forest council 🌲 — please search instead!';
+          showError(msg);
+        },
+        { timeout: 10000 }
+      );
+    }
+
+    async function reverseGeocode(lat, lon) {
+      const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error();
+      const d = await res.json();
+      return d.city || d.locality || d.principalSubdivision || 'Your Forest';
+    }
+
+    // =========================================================
+    //  SEARCH / AUTOCOMPLETE
+    // =========================================================
+    const searchInput    = document.getElementById('searchInput');
+    const autocompleteEl = document.getElementById('autocomplete');
+    let searchDebounce   = null;
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchDebounce);
+      const q = searchInput.value.trim();
+      if (q.length < 2) { closeAutocomplete(); return; }
+      searchDebounce = setTimeout(() => doAutocomplete(q), 300);
+    });
+
+    searchInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        closeAutocomplete();
+        doSearch(searchInput.value.trim());
+      }
+      if (e.key === 'Escape') closeAutocomplete();
+    });
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      closeAutocomplete();
+      doSearch(searchInput.value.trim());
+    });
+
+    document.getElementById('locBtn').addEventListener('click', detectLocation);
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.search-wrap')) closeAutocomplete();
+    });
+
+    async function doAutocomplete(q) {
+      try {
+        geoResults = await searchCity(q);
+        renderAutocomplete(geoResults);
+      } catch { closeAutocomplete(); }
+    }
+
+    function renderAutocomplete(results) {
+      if (!results.length) { closeAutocomplete(); return; }
+      autocompleteEl.innerHTML = '';
+      results.slice(0, 5).forEach((r) => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        const country = r.country ? `<span class="country">· ${r.admin1 ? r.admin1 + ', ' : ''}${r.country}</span>` : '';
+        item.innerHTML = `🏘️ <strong>${r.name}</strong>${country}`;
+        item.addEventListener('click', () => {
+          searchInput.value = r.name;
+          closeAutocomplete();
+          fetchWeather(r.latitude, r.longitude, `${r.name}${r.country ? ', ' + r.country : ''}`);
+        });
+        autocompleteEl.appendChild(item);
+      });
+      autocompleteEl.classList.add('open');
+    }
+
+    function closeAutocomplete() {
+      autocompleteEl.classList.remove('open');
+      autocompleteEl.innerHTML = '';
+    }
+
+    async function doSearch(q) {
+      if (!q) return;
+      try {
+        showState('loading');
+        const results = await searchCity(q);
+        if (!results.length) {
+          showError(`The gnomes have never heard of "${q}" 🗺️ — try a different village name!`);
+          return;
+        }
+        const r = results[0];
+        fetchWeather(r.latitude, r.longitude, `${r.name}${r.country ? ', ' + r.country : ''}`);
+      } catch {
+        showError('The crystal ball is foggy… please try again 🔮');
+      }
+    }
+
+    // =========================================================
+    //  INIT — try geolocation on load
+    // =========================================================
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (navigator.geolocation) {
+          detectLocation();
+        }
+        // else just show welcome state
+      }, 600);
+    });
+  </script>
+</body>
+</html>

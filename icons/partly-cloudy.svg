@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#87ceeb"/>
+      <stop offset="100%" stop-color="#e8f4f8"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff9c4" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#ffd166" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#d4a843" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sunDisc" cx="38%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#fff9c4"/>
+      <stop offset="60%" stop-color="#f0c040"/>
+      <stop offset="100%" stop-color="#c8920a"/>
+    </radialGradient>
+    <radialGradient id="cloudGrad1" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#ddd8cc"/>
+    </radialGradient>
+    <radialGradient id="cloudGrad2" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#f5f0e8"/>
+      <stop offset="100%" stop-color="#c9b99a"/>
+    </radialGradient>
+    <filter id="bigGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="cloudShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="2" dy="5" stdDeviation="5" flood-color="#8b7355" flood-opacity="0.25"/>
+    </filter>
+    <filter id="rayBlur">
+      <feGaussianBlur stdDeviation="1.8"/>
+    </filter>
+    <filter id="cloudSoft">
+      <feGaussianBlur stdDeviation="1"/>
+    </filter>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="200" height="200" fill="url(#sky)"/>
+
+  <!-- Sun glow aura behind everything -->
+  <circle cx="68" cy="72" r="72" fill="url(#sunGlow)" opacity="0.75"/>
+
+  <!-- Sun rays (partially obscured, peek around cloud) -->
+  <g filter="url(#rayBlur)" opacity="0.7">
+    <!-- Top ray -->
+    <path d="M68 42 C69 33 71 26 68 17 C65 26 67 33 68 42" fill="#ffd166"/>
+    <!-- Top-right ray -->
+    <path d="M89 51 C96 43 103 38 110 31 C102 39 95 43 89 51" fill="#ffd166"/>
+    <!-- Top-left ray -->
+    <path d="M47 51 C40 43 33 38 26 31 C33 39 40 43 47 51" fill="#ffd166"/>
+    <!-- Left ray -->
+    <path d="M38 72 C29 70 21 70 11 69 C21 72 29 74 38 72" fill="#ffd166"/>
+    <!-- Far top-right visible above cloud -->
+    <path d="M92 42 C100 36 108 31 116 25 C107 32 99 37 92 42" fill="#ffd166"/>
+  </g>
+
+  <!-- Sun disc -->
+  <circle cx="68" cy="72" r="30" fill="url(#sunDisc)" filter="url(#bigGlow)"/>
+  <circle cx="68" cy="72" r="26" fill="url(#sunDisc)"/>
+
+  <!-- Cloud shadow blur on ground below -->
+  <ellipse cx="130" cy="155" rx="52" ry="8" fill="#8b7355" opacity="0.12" filter="url(#rayBlur)"/>
+
+  <!-- Cloud - main fluffy shape made of overlapping circles -->
+  <g filter="url(#cloudShadow)">
+    <!-- Cloud base -->
+    <path d="M78 148 Q78 130 90 126 Q96 120 108 120 Q124 118 134 128 Q148 124 156 134 Q168 136 166 148 Q166 158 155 160 Q90 162 80 158 Z" fill="url(#cloudGrad2)"/>
+    <!-- Fluffy bumps on top -->
+    <circle cx="100" cy="121" r="18" fill="url(#cloudGrad1)"/>
+    <circle cx="122" cy="117" r="20" fill="url(#cloudGrad1)"/>
+    <circle cx="144" cy="124" r="16" fill="url(#cloudGrad1)"/>
+    <circle cx="85" cy="128" r="15" fill="url(#cloudGrad1)"/>
+    <circle cx="163" cy="133" r="13" fill="url(#cloudGrad1)"/>
+    <circle cx="112" cy="111" r="14" fill="url(#cloudGrad1)"/>
+    <!-- Cloud body fill -->
+    <rect x="82" y="128" width="88" height="32" rx="6" fill="url(#cloudGrad1)" filter="url(#cloudSoft)"/>
+  </g>
+
+  <!-- Cloud inner highlight -->
+  <path d="M100 114 Q116 109 130 113" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Tiny sparkle near sun -->
+  <path d="M30 46 L31 50 L35 51 L31 52 L30 56 L29 52 L25 51 L29 50 Z" fill="#fff7a1" opacity="0.9"/>
+  <circle cx="18" cy="80" r="2" fill="#fff9c4" opacity="0.8"/>
+  <circle cx="45" cy="28" r="1.5" fill="#fff9c4" opacity="0.9"/>
+
+  <!-- Ground and grass -->
+  <path d="M0 178 Q40 172 80 175 Q120 178 160 173 Q180 171 200 175 L200 200 L0 200 Z" fill="#4a7c59"/>
+  <path d="M0 182 Q50 177 100 180 Q150 183 200 179 L200 200 L0 200 Z" fill="#2d5a27"/>
+
+  <!-- Grass tufts -->
+  <path d="M25 178 C24 172 26 168 25 164 M25 164 C27 168 29 172 28 177" stroke="#2d5a27" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M60 180 C59 174 60 171 59 166 M59 166 C61 170 63 174 62 179" stroke="#4a7c59" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>

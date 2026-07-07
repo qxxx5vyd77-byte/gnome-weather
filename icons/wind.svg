@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d8e8d0"/>
+      <stop offset="100%" stop-color="#f0ece0"/>
+    </linearGradient>
+    <linearGradient id="windLine1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7aaa7a" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#7aaa7a" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#7aaa7a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="windLine2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5a8a5a" stop-opacity="0"/>
+      <stop offset="25%" stop-color="#5a8a5a" stop-opacity="0.7"/>
+      <stop offset="90%" stop-color="#5a8a5a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#5a8a5a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="stemGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8b5e3c"/>
+      <stop offset="100%" stop-color="#6a4030"/>
+    </linearGradient>
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+    <filter id="windBlur">
+      <feGaussianBlur stdDeviation="1"/>
+    </filter>
+    <filter id="leafBlur">
+      <feGaussianBlur stdDeviation="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Soft grassy background -->
+  <rect width="200" height="200" fill="url(#bg)"/>
+
+  <!-- Ground hints -->
+  <path d="M0 185 Q50 179 100 182 Q150 185 200 180 L200 200 L0 200 Z" fill="#4a7c59" opacity="0.6"/>
+  <path d="M0 190 Q50 185 100 188 Q150 191 200 186 L200 200 L0 200 Z" fill="#2d5a27" opacity="0.7"/>
+
+  <!-- Flowing wind lines - organic bezier curves in sage green -->
+  <!-- Wind line 1 (top, strong) -->
+  <path d="M0 55 C25 48 50 62 80 55 C110 48 130 62 165 52 C180 48 192 54 200 50"
+    stroke="url(#windLine1)" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#windBlur)"/>
+
+  <!-- Wind line 2 (middle, curves upward) -->
+  <path d="M-5 85 C20 78 45 92 75 82 C100 74 125 90 155 80 C172 75 188 82 205 76"
+    stroke="url(#windLine2)" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#windBlur)"/>
+
+  <!-- Wind line 3 (swooping curve) -->
+  <path d="M-5 115 C30 105 55 118 85 108 C110 100 130 112 162 102 C178 97 195 106 210 100"
+    stroke="#6aaa6a" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.65" filter="url(#windBlur)"/>
+
+  <!-- Wind line 4 (subtle lower) -->
+  <path d="M0 145 C35 136 65 150 100 140 C128 132 155 144 190 136"
+    stroke="#5a8a5a" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5" filter="url(#windBlur)"/>
+
+  <!-- Wind swirl / spiral accent -->
+  <path d="M168 68 C172 64 178 64 180 68 C182 72 178 78 172 78 C166 78 162 72 165 66 C168 60 176 58 183 62"
+    stroke="#7aaa7a" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Second small swirl -->
+  <path d="M22 130 C25 126 31 126 33 130 C35 134 32 138 26 138 C21 138 17 134 20 129"
+    stroke="#6aaa6a" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Dandelion plant (stem + head + seeds blowing) -->
+  <!-- Dandelion stem -->
+  <path d="M65 185 C64 175 63 162 65 148 C67 138 70 128 72 115" stroke="url(#stemGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Side leaf -->
+  <path d="M67 160 C60 152 55 144 57 136 C59 130 65 130 66 138 Z" fill="#4a7c59" opacity="0.8"/>
+  <path d="M67 160 C62 152 60 143 58 137" stroke="#2d5a27" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Dandelion head (mostly blown) — just a few seeds remaining -->
+  <!-- Centre disc -->
+  <circle cx="72" cy="112" r="5" fill="#d4a843" opacity="0.8"/>
+  <!-- Remaining seed stems on plant -->
+  <line x1="72" y1="107" x2="72" y2="100" stroke="#8b5e3c" stroke-width="1" stroke-linecap="round"/>
+  <line x1="72" y1="107" x2="76" y2="101" stroke="#8b5e3c" stroke-width="1" stroke-linecap="round"/>
+  <line x1="72" y1="107" x2="68" y2="100" stroke="#8b5e3c" stroke-width="1" stroke-linecap="round"/>
+  <!-- Seed tufts remaining -->
+  <circle cx="72" cy="99" r="3" fill="#f5f0e8" opacity="0.85"/>
+  <circle cx="76" cy="100" r="2.5" fill="#f5f0e8" opacity="0.8"/>
+  <circle cx="68" cy="99" r="2.5" fill="#f5f0e8" opacity="0.8"/>
+
+  <!-- Dandelion seeds blowing away in the wind -->
+  <!-- Seed 1 (close, just left) -->
+  <g opacity="0.9">
+    <line x1="55" y1="95" x2="50" y2="90" stroke="#8b5e3c" stroke-width="0.8" stroke-linecap="round"/>
+    <circle cx="50" cy="89" r="2.2" fill="#f5f0e8"/>
+    <!-- Seed "parachute" spokes -->
+    <line x1="50" y1="89" x2="48" y2="84" stroke="#d4c4a8" stroke-width="0.6"/>
+    <line x1="50" y1="89" x2="52" y2="84" stroke="#d4c4a8" stroke-width="0.6"/>
+    <line x1="50" y1="89" x2="50" y2="84" stroke="#d4c4a8" stroke-width="0.6"/>
+    <!-- Pappus (fluffy top) -->
+    <path d="M47 84 Q50 81 53 84" stroke="#f5f0e8" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Seed 2 (mid-distance) -->
+  <g opacity="0.8">
+    <line x1="38" y1="76" x2="33" y2="70" stroke="#8b5e3c" stroke-width="0.7" stroke-linecap="round"/>
+    <circle cx="33" cy="69" r="2" fill="#f5f0e8"/>
+    <line x1="33" y1="69" x2="31" y2="63" stroke="#d4c4a8" stroke-width="0.6"/>
+    <line x1="33" y1="69" x2="35" y2="63" stroke="#d4c4a8" stroke-width="0.6"/>
+    <line x1="33" y1="69" x2="33" y2="63" stroke="#d4c4a8" stroke-width="0.6"/>
+    <path d="M30 63 Q33 60 36 63" stroke="#f5f0e8" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Seed 3 (far, drifting high) -->
+  <g opacity="0.65">
+    <line x1="22" y1="58" x2="18" y2="52" stroke="#8b5e3c" stroke-width="0.6" stroke-linecap="round"/>
+    <circle cx="18" cy="51" r="1.7" fill="#f5f0e8"/>
+    <line x1="18" y1="51" x2="16" y2="45" stroke="#d4c4a8" stroke-width="0.5"/>
+    <line x1="18" y1="51" x2="20" y2="45" stroke="#d4c4a8" stroke-width="0.5"/>
+    <path d="M15 45 Q18 42 21 45" stroke="#f5f0e8" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Seed 4 (going upper right) -->
+  <g opacity="0.7">
+    <line x1="105" y1="78" x2="114" y2="72" stroke="#8b5e3c" stroke-width="0.7" stroke-linecap="round"/>
+    <circle cx="115" cy="71" r="2" fill="#f5f0e8"/>
+    <line x1="115" y1="71" x2="113" y2="65" stroke="#d4c4a8" stroke-width="0.6"/>
+    <line x1="115" y1="71" x2="117" y2="65" stroke="#d4c4a8" stroke-width="0.6"/>
+    <line x1="115" y1="71" x2="115" y2="65" stroke="#d4c4a8" stroke-width="0.6"/>
+    <path d="M112 65 Q115 62 118 65" stroke="#f5f0e8" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Seed 5 (high up, small) -->
+  <g opacity="0.55">
+    <line x1="142" y1="55" x2="148" y2="48" stroke="#8b5e3c" stroke-width="0.6" stroke-linecap="round"/>
+    <circle cx="149" cy="47" r="1.5" fill="#f5f0e8"/>
+    <line x1="149" y1="47" x2="148" y2="42" stroke="#d4c4a8" stroke-width="0.5"/>
+    <line x1="149" y1="47" x2="151" y2="42" stroke="#d4c4a8" stroke-width="0.5"/>
+    <path d="M147 42 Q150 40 153 42" stroke="#f5f0e8" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Swirling leaf -->
+  <g transform="rotate(-40, 155, 148)">
+    <path d="M155 148 C160 140 168 138 170 144 C172 150 165 158 155 158 C149 158 148 152 155 148 Z" fill="#c17f59" opacity="0.75"/>
+    <path d="M155 148 C162 143 167 141 169 145" stroke="#8b4030" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <!-- Second smaller leaf swirling -->
+  <g transform="rotate(20, 130, 100)">
+    <path d="M130 100 C135 93 142 91 143 97 C144 103 138 109 130 108 C125 107 125 102 130 100 Z" fill="#4a7c59" opacity="0.7"/>
+  </g>
+</svg>

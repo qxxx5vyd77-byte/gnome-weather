@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <radialGradient id="skyGrad" cx="50%" cy="85%" r="70%">
+      <stop offset="0%" stop-color="#ffd166" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#f4a261" stop-opacity="0.9"/>
+      <stop offset="75%" stop-color="#e76f51" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#a8d8ea" stop-opacity="0.4"/>
+    </radialGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff7a1" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#ffd166" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#f4a261" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a7c59"/>
+      <stop offset="100%" stop-color="#2d5a27"/>
+    </linearGradient>
+    <linearGradient id="hillGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5a9c6e"/>
+      <stop offset="100%" stop-color="#3d7a52"/>
+    </linearGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Sky background -->
+  <rect width="200" height="200" fill="url(#skyGrad)" rx="12"/>
+  <!-- Horizon glow -->
+  <ellipse cx="100" cy="135" rx="90" ry="30" fill="#ffd166" opacity="0.5" filter="url(#softGlow)"/>
+  <!-- Sun glow halo -->
+  <circle cx="100" cy="130" r="55" fill="url(#sunGlow)" opacity="0.7"/>
+  <!-- Sun rays -->
+  <g transform="translate(100,130)" stroke="#ffd166" stroke-width="2.5" opacity="0.8">
+    <line x1="0" y1="-48" x2="0" y2="-62"/>
+    <line x1="34" y1="-34" x2="44" y2="-44" transform="rotate(45)"/>
+    <line x1="48" y1="0" x2="62" y2="0"/>
+    <line x1="-48" y1="0" x2="-62" y2="0"/>
+    <line x1="-34" y1="-34" x2="-44" y2="-44" transform="rotate(-45)"/>
+    <line x1="24" y1="-42" x2="30" y2="-54" transform="rotate(22.5)"/>
+    <line x1="-24" y1="-42" x2="-30" y2="-54" transform="rotate(-22.5)"/>
+  </g>
+  <!-- Sun (half risen) -->
+  <clipPath id="horizonClip">
+    <rect x="0" y="0" width="200" height="133"/>
+  </clipPath>
+  <circle cx="100" cy="133" r="28" fill="#fff7a1" filter="url(#softGlow)" clip-path="url(#horizonClip)"/>
+  <circle cx="100" cy="133" r="22" fill="#ffd166" clip-path="url(#horizonClip)"/>
+  <!-- Rolling hills -->
+  <path d="M0,155 Q30,125 60,140 Q90,155 120,130 Q150,108 180,130 Q190,140 200,135 L200,200 L0,200 Z" fill="url(#hillGrad2)"/>
+  <path d="M0,170 Q40,150 80,160 Q120,170 160,155 Q180,148 200,158 L200,200 L0,200 Z" fill="url(#hillGrad)"/>
+  <!-- Rooster silhouette on fence -->
+  <g transform="translate(155,145)" fill="#2d5a27" opacity="0.9">
+    <rect x="-4" y="0" width="3" height="20"/>
+    <rect x="6" y="0" width="3" height="20"/>
+    <rect x="-5" y="-2" width="16" height="3"/>
+  </g>
+  <!-- Small rooster body -->
+  <g transform="translate(148,137)" fill="#2d5a27" opacity="0.85">
+    <ellipse cx="8" cy="5" rx="7" ry="5"/>
+    <circle cx="14" cy="1" r="4"/>
+    <path d="M18,1 L22,-1 L20,2 Z"/>
+    <path d="M14,-3 L16,-6 L17,-3 L15,-3 Z" fill="#8b5e3c"/>
+    <path d="M2,8 L0,12 M4,9 L3,13" stroke="#2d5a27" stroke-width="1.5" fill="none"/>
+  </g>
+  <!-- Morning mist wisps -->
+  <g opacity="0.35">
+    <ellipse cx="40" cy="162" rx="35" ry="6" fill="#f5f0e8"/>
+    <ellipse cx="150" cy="168" rx="30" ry="5" fill="#f5f0e8"/>
+    <ellipse cx="100" cy="172" rx="45" ry="7" fill="#f5f0e8"/>
+  </g>
+  <!-- Sparkle stars -->
+  <g fill="#fff7a1" opacity="0.9">
+    <polygon points="30,25 32,31 38,31 33,35 35,41 30,37 25,41 27,35 22,31 28,31" transform="scale(0.4) translate(45,35)"/>
+    <polygon points="30,25 32,31 38,31 33,35 35,41 30,37 25,41 27,35 22,31 28,31" transform="scale(0.25) translate(520,60)"/>
+  </g>
+</svg>

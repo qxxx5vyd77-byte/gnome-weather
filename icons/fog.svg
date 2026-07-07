@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c8d8e0"/>
+      <stop offset="100%" stop-color="#e8e4dc"/>
+    </linearGradient>
+    <linearGradient id="fogBand1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f0ece4" stop-opacity="0"/>
+      <stop offset="20%" stop-color="#f0ece4" stop-opacity="0.85"/>
+      <stop offset="80%" stop-color="#e8e4dc" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#e8e4dc" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fogBand2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ddd8d0" stop-opacity="0"/>
+      <stop offset="15%" stop-color="#ddd8d0" stop-opacity="0.8"/>
+      <stop offset="85%" stop-color="#ccc8c0" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ccc8c0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fogBand3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e0ddd6" stop-opacity="0"/>
+      <stop offset="25%" stop-color="#e0ddd6" stop-opacity="0.75"/>
+      <stop offset="75%" stop-color="#d4d0c8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#d4d0c8" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="lanternGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd166" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#f4a261" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#e76f51" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lanternBody" cx="40%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffeaa7"/>
+      <stop offset="100%" stop-color="#e17055"/>
+    </radialGradient>
+    <filter id="fogBlur">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <filter id="fogEdge">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="lanternGlowFilter" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="gnomeBlur">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="200" height="200" fill="url(#sky)"/>
+
+  <!-- Ground hint at very bottom (barely visible through fog) -->
+  <path d="M0 178 Q50 174 100 177 Q150 180 200 175 L200 200 L0 200 Z" fill="#5a7a60" opacity="0.3"/>
+
+  <!-- Gnome silhouette - faintly visible through mist -->
+  <g opacity="0.22" filter="url(#gnomeBlur)">
+    <!-- Gnome hat (tall pointed) -->
+    <path d="M102 95 L110 130 L94 130 Z" fill="#8b3e22"/>
+    <!-- Hat brim -->
+    <ellipse cx="102" cy="130" rx="10" ry="3" fill="#6b2e18"/>
+    <!-- Gnome head -->
+    <circle cx="102" cy="138" r="8" fill="#c9956a"/>
+    <!-- Gnome body (robe) -->
+    <path d="M93 146 C90 155 88 165 87 175 L117 175 C116 165 114 155 111 146 Z" fill="#8b5e3c"/>
+    <!-- Belt hint -->
+    <rect x="90" y="156" width="24" height="3" rx="1.5" fill="#6b3a1e" opacity="0.5"/>
+    <!-- Gnome boots -->
+    <ellipse cx="92" cy="176" rx="6" ry="3" fill="#4a3020"/>
+    <ellipse cx="112" cy="176" rx="6" ry="3" fill="#4a3020"/>
+  </g>
+
+  <!-- Lantern glow (warm light) -->
+  <circle cx="148" cy="125" r="28" fill="url(#lanternGlow)" opacity="0.7" filter="url(#fogBlur)"/>
+
+  <!-- Lantern body -->
+  <g filter="url(#lanternGlowFilter)">
+    <!-- Lantern handle -->
+    <path d="M148 100 C148 96 152 94 156 96 C160 98 160 102 156 104 L148 104" stroke="#8b5e3c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Lantern top cap -->
+    <path d="M140 106 L156 106 L153 103 L143 103 Z" fill="#8b5e3c"/>
+    <!-- Lantern body (hexagonal-ish) -->
+    <rect x="141" y="106" width="14" height="22" rx="2" fill="#8b5e3c"/>
+    <!-- Warm inner light panels -->
+    <rect x="143" y="108" width="10" height="18" rx="1" fill="url(#lanternBody)" opacity="0.9"/>
+    <!-- Lantern frame lines -->
+    <line x1="148" y1="107" x2="148" y2="128" stroke="#6b3e1e" stroke-width="1.5"/>
+    <!-- Lantern bottom -->
+    <path d="M141 128 L148 134 L155 128 Z" fill="#8b5e3c"/>
+  </g>
+
+  <!-- Fog band 1 - lower (thickest) -->
+  <path d="M-10 155 Q30 148 70 153 Q110 158 150 151 Q180 146 210 154 Q210 165 180 164 Q140 160 100 165 Q60 170 20 163 Z"
+    fill="url(#fogBand1)" filter="url(#fogBlur)"/>
+
+  <!-- Fog band 2 - middle -->
+  <path d="M-10 115 Q25 108 65 114 Q105 120 145 112 Q175 106 210 116 Q215 126 185 125 Q145 120 105 127 Q65 134 25 124 Z"
+    fill="url(#fogBand2)" filter="url(#fogBlur)"/>
+
+  <!-- Fog band 3 - upper (lightest) -->
+  <path d="M-10 72 Q35 65 75 72 Q115 79 155 70 Q185 63 210 74 Q215 84 185 83 Q145 77 105 85 Q65 93 25 82 Z"
+    fill="url(#fogBand3)" filter="url(#fogEdge)"/>
+
+  <!-- Additional wispy fog tendrils -->
+  <path d="M0 140 Q50 133 100 140 Q150 147 200 138" stroke="#e8e4dc" stroke-width="12" fill="none" opacity="0.4" stroke-linecap="round" filter="url(#fogBlur)"/>
+  <path d="M0 100 Q60 92 120 100 Q160 107 200 98" stroke="#ddd8d0" stroke-width="8" fill="none" opacity="0.35" stroke-linecap="round" filter="url(#fogBlur)"/>
+</svg>

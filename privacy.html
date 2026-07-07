@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy & Support · Weather Gnome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍄</text></svg>" />
+  <style>
+    :root {
+      --forest-green: #4a7c59;
+      --deep-green:   #2d5a27;
+      --warm-brown:   #8b5e3c;
+      --cream:        #f5f0e1;
+      --ink:          #2c2416;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    header {
+      background: linear-gradient(180deg, var(--deep-green), var(--forest-green));
+      color: #fff;
+      text-align: center;
+      padding: 3rem 1.5rem 2.5rem;
+    }
+    header h1 { font-family: 'Pacifico', cursive; font-weight: 400; font-size: 2.2rem; }
+    header p { opacity: 0.85; margin-top: 0.5rem; }
+    main { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    h2 {
+      color: var(--deep-green);
+      margin: 2.2rem 0 0.8rem;
+      font-size: 1.35rem;
+    }
+    p, li { margin-bottom: 0.8rem; }
+    ul { padding-left: 1.4rem; }
+    a { color: var(--forest-green); font-weight: 600; }
+    .updated { font-size: 0.9rem; opacity: 0.65; margin-top: 1rem; }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(44, 36, 22, 0.08);
+      margin-top: 1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍄 Weather Gnome</h1>
+    <p>Privacy Policy &amp; Support</p>
+  </header>
+
+  <main>
+    <h2>Privacy Policy</h2>
+    <div class="card">
+      <p><strong>The short version: Weather Gnome doesn't want your data. It just wants to tell you the weather.</strong></p>
+      <ul>
+        <li><strong>No accounts.</strong> There is nothing to sign up for and no profile about you.</li>
+        <li><strong>Location, only for weather.</strong> If you allow location access, your device's coordinates are sent directly to the <a href="https://open-meteo.com">Open-Meteo</a> weather service to fetch your local forecast. That's the only thing they're used for. Location access is optional — you can search for cities instead.</li>
+        <li><strong>Nothing is stored on our servers.</strong> We don't run any. Your saved cities, settings, and gnome collection live only on your device.</li>
+        <li><strong>No tracking, no ads, no analytics.</strong> The app contains no advertising, no third-party analytics, and no tracking of any kind. Your data is never sold or shared.</li>
+      </ul>
+      <p>Weather and geocoding requests are made over HTTPS to Open-Meteo (open-meteo.com), whose own privacy policy is available on their site. The coordinates sent are not linked to your identity.</p>
+      <p>If this policy ever changes, the change will be posted on this page.</p>
+      <p class="updated">Last updated: July 6, 2026</p>
+    </div>
+
+    <h2 id="support">Support</h2>
+    <div class="card">
+      <p>Something foggy? A gnome misbehaving? We'd love to help.</p>
+      <p>Email: <a href="mailto:MatthewMalham@hotmail.com?subject=Weather%20Gnome%20Support">MatthewMalham@hotmail.com</a></p>
+      <p>Please include your iOS version and what you were doing when the trouble started — the gnome council reviews every letter. 🍄</p>
+    </div>
+  </main>
+
+  <footer>© 2026 Matthew Malham · Weather data by <a href="https://open-meteo.com">Open-Meteo</a></footer>
+</body>
+</html>
