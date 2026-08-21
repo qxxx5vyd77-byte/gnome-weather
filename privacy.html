@@ -68,12 +68,13 @@
       <p><strong>The short version: Weather Gnome doesn't want your data. It just wants to tell you the weather.</strong></p>
       <ul>
         <li><strong>No accounts.</strong> There is nothing to sign up for and no profile about you.</li>
-        <li><strong>Location, only for weather.</strong> If you allow location access, your device's coordinates are sent directly to the <a href="https://open-meteo.com">Open-Meteo</a> weather service to fetch your local forecast. That's the only thing they're used for. Location access is optional — you can search for cities instead.</li>
+        <li><strong>Location, only for weather.</strong> If you allow location access, your device's coordinates are sent directly to <a href="https://developer.apple.com/weatherkit/">Apple WeatherKit</a> to fetch your local forecast, and to Apple's geocoding service to name the place you're in. That's the only thing they're used for. Location access is optional — you can search for cities instead.</li>
         <li><strong>Nothing is stored on our servers.</strong> We don't run any. Your saved cities, settings, and gnome collection live only on your device.</li>
         <li><strong>No tracking, no ads, no analytics.</strong> The app contains no advertising, no third-party analytics, and no tracking of any kind. Your data is never sold or shared.</li>
       </ul>
-      <p>Weather and geocoding requests are made over HTTPS to Open-Meteo (open-meteo.com), whose own privacy policy is available on their site. The coordinates sent are not linked to your identity.</p>
+      <p>Weather and geocoding requests are handled on-device by Apple's WeatherKit and CoreLocation frameworks and are covered by <a href="https://www.apple.com/legal/privacy/">Apple's privacy policy</a>. The coordinates sent are not linked to your identity.</p>
       <p>If this policy ever changes, the change will be posted on this page.</p>
+      <!-- SHIP-DAY TODO: set this to the ACTUAL v2.3 publish date before pushing -->
       <p class="updated">Last updated: July 6, 2026</p>
     </div>
 
@@ -85,6 +86,6 @@
     </div>
   </main>
 
-  <footer>© 2026 Matthew Malham · Weather data by <a href="https://open-meteo.com">Open-Meteo</a></footer>
+  <footer>© 2026 Matthew Malham · Weather data by <a href="https://weatherkit.apple.com/legal-attribution.html"> Weather</a></footer>
 </body>
 </html>
